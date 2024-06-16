@@ -1,4 +1,6 @@
 "use client"
+
+import { FormEvent, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from '@/components/ui/button'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -6,14 +8,25 @@ import { faGoogle } from "@fortawesome/free-brands-svg-icons/faGoogle"
 import Link from "next/link"
 
 function Login() {
+    const [email , setEmail] = useState("");
+    const [password , setPassword] = useState("");
+
+    const handleSubmit = (e:FormEvent<HTMLFormElement>) : void =>
+    {
+        e.preventDefault()
+        console.log(email)
+        console.log(password)
+    }
+
+    
     return (
         <div className="mt-10 max-w-md w-full mx-auto rounded-md p-6 md:p-8 shadow-input bg-white border border-gray-200 dark:border-gray-800 dark:bg-black">
             <h1 className="font-bold text-2xl text-center mb-4">Sign In</h1>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="space-y-4">
-                    <Input id="email" type="email" placeholder="Enter your email" />
-                    <Input id="password" type="password" placeholder="Enter your password" />
-                    <Button className="w-full">
+                    <Input id="email" type="email" placeholder="xyz@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required/>
+                    <Input id="password" type="password" placeholder="*******" value={password} onChange={(e)=>setPassword(e.target.value)} required />
+                    <Button className="w-full" type="submit">
                         Sign in &rarr;
                     </Button>
                 </div>
