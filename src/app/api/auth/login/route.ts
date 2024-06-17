@@ -1,35 +1,32 @@
 import { NextResponse , NextRequest} from "next/server";
 import connectDB from "@/lib/db";
+import bcryptjs from 'bcryptjs'
 
 export async function POST(request:NextRequest){
     try {
         const connection = await connectDB();
-        console.log("here")
         const req= await request.json()
         const { email, password } = req;
         
-        const query:string = 'INSERT INTO users values * FROM users WHERE email = ? AND password = ?';
-        const [rows] = await connection.query('INSERT INTO users values * FROM users WHERE email = ? AND password = ?' ,[1 ,"88i" , email , password]);
-        if (!rows) {
-            return NextResponse.json({ message: 'User already exists' });
-          }
-    
-
+        let query: string = 'SELECT * FROM users WHERE email =? ';
+        const [rows] = await connection.execute(query, [email]);
+       
         if (rows) {
-            console.log("these is ROW" , rows)
-            return NextResponse.json({status:200})
-           
-        } else {
-            console.log("these is ROW" , rows)
-            return NextResponse.json({status:401})
+            return NextResponse.json({ message: 'User already exists' },{status:400});
+          
+       } 
+        const salt = await bcryptjs.genSalt(10);
+        const hashedpassword = await bcryptjs.hash(password , salt);
+        query = 'INSERT INTO users VALUES(?,?,?)';
+        const newUser = await connection.execute(query,[email,hashedpassword])
+        console.log(newUser)
 
-        }
 
-        // Close the database connection
+
         connection.end();
-        // const connection = await connectDB()
+
 
     } catch (error:any) {
-        return NextResponse.json({Error:error.message},{status:500})
+        return NextResponse.json({ERror:error.message},{status:500})
     }
 }

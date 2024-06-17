@@ -1,17 +1,19 @@
 // lib/db.js
-import mysql from 'mysql2/promise';
-
+import mysql , {ConnectionOptions} from 'mysql2/promise';
+const access: ConnectionOptions = {
+  host: 'localhost',
+      user:  'root',
+      password: '$UM!T376mysql',
+      database: 'nextuser',
+      port:3306,
+      // waitForConnections: true,
+};
 const connectDB = async () => {
   try {
-    const connection = await mysql.createPool({
-      host: process.env.MYSQL_HOST || 'localhost',
-      user: process.env.MYSQL_USER || 'root',
-      password: process.env.MYSQL_PASSWORD || '$UM!T376mysql',
-      database: 'nextuser',
-      port:3306
-    });
+    const connection = await mysql.createPool(access);
     console.log('Successfully connected to MySQL 🥂');
-    return connection.getConnection();
+    // console.log(connection.getConnection())
+    return  connection
   } catch (err) {
     if (err instanceof Error) {
       console.error(`Error: ${err.message}`);
