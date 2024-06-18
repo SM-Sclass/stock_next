@@ -8,19 +8,23 @@ export async function POST(request:NextRequest){
         const req= await request.json()
         const { email, password } = req;
         
-        let query: string = 'SELECT * FROM users WHERE email =? ';
-        const [rows] = await connection.execute(query, [email]);
-       
-        if (rows) {
+        let query: string = 'SELECT * FROM users WHERE email =?,password=?';
+        const [result]= await connection.execute(query, [email,password ]);
+        const rows = result as any[];
+        console.log("start",rows , "rowss")
+        if (rows.length) {
             return NextResponse.json({ message: 'User already exists' },{status:400});
           
        } 
-        const salt = await bcryptjs.genSalt(10);
-        const hashedpassword = await bcryptjs.hash(password , salt);
-        query = 'INSERT INTO users VALUES(?,?,?)';
-        const newUser = await connection.execute(query,[email,hashedpassword])
-        console.log(newUser)
+       else{
 
+           const salt = await bcryptjs.genSalt(10);
+           const hashedpassword = await bcryptjs.hash(password , salt);
+           query = 'INSERT INTO users VALUES(?,?,?)';
+           const newUser = await connection.execute(query,[2,email,hashedpassword])
+           console.log(newUser)
+           return NextResponse.json({ message: 'new user' },{status:400});
+        }
 
 
         connection.end();
