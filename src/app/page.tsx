@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import "./globals.css";
-import Header from "@/components/ui/header";
+
+
 function App() {
 
   const [currentDate, setCurrentDate] = useState("");
@@ -15,6 +16,11 @@ function App() {
     setCurrentDate(formattedDate);
   }, []);
 
+    const handleSubmit= ()=>{
+      // handle submition of form
+    }
+
+
   return (
     <div className="appbody">
       <div className="box">
@@ -22,9 +28,11 @@ function App() {
           <h1>Trading details</h1>
         </div>
         <div className="inputbox">
-          <div className="row">
+          <form onSubmit={handleSubmit}>
+            <div className="row">
             <label className="date">
-              Date: <input name="date" type="date" value={currentDate} />
+              Date: 
+              <input name="date" type="date" value={currentDate} onChange={(e)=>setCurrentDate(e.target.value)} />
             </label>
             <label className="item">
               Item: <input name="item" type="text" />
@@ -36,21 +44,23 @@ function App() {
               Lot size: <input name="lotsize" type="number" />
             </label>
             <label className="numberlot">
-              No of lot: <input name="numberlot" type="number" />
+              Number of lot: <input name="numberlot" type="number" />
             </label>
             <label className="buyqty">
-              Buy qty: <input name="buyqty" type="number" />
+              Buy quantity: <input name="buyqty" type="number" />
             </label>
             <label className="sell">
-              Sell qty: <input name="sell" type="number" />
+              Sell quantity: <input name="sell" type="number" />
             </label>
             <label className="sellprice">
               Sell price: <input name="sellprice" type="number" step="0.01" />
             </label>
             <div className="submit1">
+
               <button className="submit">Submit</button>
             </div>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
