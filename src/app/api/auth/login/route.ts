@@ -2,7 +2,7 @@ import { NextResponse , NextRequest} from "next/server";
 import connectDB from "@/lib/db";
 import bcryptjs from 'bcryptjs'
 
-export async function POST(request:NextRequest){
+export async function GET(request:NextRequest){
     try {
         const connection = await connectDB();
         const req= await request.json()
@@ -12,8 +12,8 @@ export async function POST(request:NextRequest){
         const [result]= await connection.execute(query, [email,password ]);
         const rows = result as any[];
         console.log("start",rows , "rowss")
-        if (rows.length) {
-            return NextResponse.json({ message: 'User already exists' },{status:400});
+        if (rows.length>0) {
+            return NextResponse.json({ message: 'User Found' },{status:200});
           
        } 
        else{
