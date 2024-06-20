@@ -2,31 +2,26 @@ import { NextResponse , NextRequest} from "next/server";
 import connectDB from "@/lib/db";
 import bcryptjs from 'bcryptjs'
 
-export async function GET(request:NextRequest){
+export async function POST(request:NextRequest){
     try {
         const connection = await connectDB();
         const req= await request.json()
         const { email, password } = req;
         
-        let query: string = 'SELECT * FROM users WHERE email =?,password=?';
-        const [result]= await connection.execute(query, [email,password ]);
+        let query: string = 'SELECT * FROM users WHERE email =?';
+        const [result]= await connection.execute(query, [email]);
         const rows = result as any[];
-        console.log("start",rows , "rowss")
-        if (rows.length>0) {
-            return NextResponse.json({ message: 'User Found' },{status:200});
-          
-       } 
-       else{
-
-           const salt = await bcryptjs.genSalt(10);
-           const hashedpassword = await bcryptjs.hash(password , salt);
-           query = 'INSERT INTO users VALUES(?,?,?)';
-           const newUser = await connection.execute(query,[2,email,hashedpassword])
-           console.log(newUser)
-           return NextResponse.json({ message: 'new user' },{status:400});
+        const dbpass = rows[0].password
+        console.log("start",rows , "rowss"," DB PASS" , dbpass)
+        if (rows.length<0) {
+            return NextResponse.json({Error:"User does not exist"},{status:400})
+        } 
+        console.log("User exist")
+        const validPassword = bcryptjs.compare(password,dbpass);
+        if(!validPassword){
+            return NextResponse.json({Error:"Incorrect Password"},{status:400})
         }
-
-
+        return NextResponse.json({message:"Login successfull"},{status:200})
         connection.end();
 
 

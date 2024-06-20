@@ -2,9 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import protobuf from "protobufjs";
 import { Buffer } from "buffer/";
-import "./page.css"; // Import your CSS file
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import "../page.css"; // Import your CSS file
 interface StockData {
   id: string;
   price: number;
@@ -2497,7 +2495,6 @@ export default function Live() {
         />
         <button type="submit">Search</button>
       </form>
-      <Button><Link href="/live/futurestock">FutureStock</Link></Button>
       {searchResults.length > 0 && (
         <ul className="search-results">
           {searchResults.map((result, index) => (
