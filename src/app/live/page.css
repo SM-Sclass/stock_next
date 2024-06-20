@@ -99,7 +99,7 @@ ul.search-results li:last-child {
     border-radius: 4px;
     padding: 10px;
     margin: 10px;
-    width: 113px;
+    width: 160px;
     max-width: calc(50% - 20px);
     text-align: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
