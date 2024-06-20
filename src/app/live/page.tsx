@@ -19,7 +19,7 @@ const stockNames = [
     "INDUSINDBK.NS", "AXISBANK.NS", "HCLTECH.NS", "ONGC.NS", "NTPC.NS",
     "COALINDIA.NS", "BHARTIARTL.NS", "TECHM.NS", "LTIM.NS", "DIVISLAB.NS",
     "ADANIPORTS.NS", "HDFCLIFE.NS", "SBILIFE.NS", "ULTRACEMCO.NS",
-    "BAJAJ-AUTO.NS", "BAJAJFINSV.NS", "NFLX", "CCL", "ADBE", "KAVL", "D",
+    "BAJAJ-AUTO.NS", "BAJAJFINSV.NS",
     "^NSEBANK", "BTC-USD",
     "HDFCBANK.NS", "ICICIBANK.NS", "KOTAKBANK.NS", "AXISBANK.NS", "SBIN.NS",
     "INDUSINDBK.NS", "RBLBANK.NS", "FEDERALBNK.NS", "PNB.NS", "BANKBARODA.NS",
@@ -155,7 +155,7 @@ export default function Live() {
 
     return (
         <>
-            <h1>{marketOpen ? 'Market is open ❤️' : 'Market is closed Ὁ'}</h1>
+            <h1>{marketOpen ? 'Market is open ❤️' : 'Market is closed 💔'}</h1>
             <form onSubmit={handleSearchSubmit} className="search-form">
                 <label htmlFor="search-input">Enter stock symbol:</label>
                 <input
