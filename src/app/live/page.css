@@ -140,6 +140,21 @@ ul.search-results li:last-child {
     /* Light red */
 }
 
+.futuretetxt {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 100px;
+}
+
+.futurestock {
+    text-align: center;
+    border: solid black;
+    border-width: 1px;
+    border-radius: 50px;
+    background-color: #ba0101;
+    color: white;
+}
+
 @media (max-width: 767px) {
     /* Mobile devices */
     form.search-form input[type="text"] {
