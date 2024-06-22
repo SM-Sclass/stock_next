@@ -2,7 +2,8 @@
 import React from "react";
 import Link from "next/link";
 import "./header.css";
-
+import { Button } from "./button";
+import Navbar from "./navbar";
 function Header() {
   return (
     <div className="img1">
@@ -11,16 +12,17 @@ function Header() {
           <h2>Trading Bill</h2> 
         </div>
         <div className="login1">
-          <h2>
-            <Link href="/live" className="Live">Live</Link>
-          </h2>
-          <h2>
-            <Link href="/login" className="login">Login</Link>
-          </h2>
+          <h2><Link href="/live" className="Live">Live</Link></h2>
+          <h2><Link href="/login" className="login">Login</Link></h2>
         </div>
         <div className="butten">
-          <div className="Home">
-            <Link href="/" className="Home1">Home</Link>
+          <div className="w-auto">
+            <Navbar/>
+          </div>
+            
+          {/* <div className="Home">
+          <Link href="/" className="Home1 hover:bg-slate-800 w-10"> <Button className="">Home</Button></Link>
+          
           </div>
           <div className="Person">
             <label>Person</label>
@@ -32,7 +34,6 @@ function Header() {
             </select>
           </div>
           <div className="Bill">
-            <label>Bill</label>
             <select name="Bill" className="select-box">
               <option>Bill</option>
               <option>weekly Bill</option>
@@ -54,7 +55,8 @@ function Header() {
               <option>WhatsApp</option>
               <option>SMS</option>
             </select>
-          </div>
+          </div> */}
+        
         </div>
       </div>
     </div>

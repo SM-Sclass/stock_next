@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
   
     const connection = await connectDB();
     const net_buy_price:number = buy_net_price(buyprice);
-    console.log(net_buy_price)
     let query;
     let values;
   
@@ -26,14 +25,13 @@ export async function POST(req: NextRequest) {
     } else {
       query = 'INSERT INTO main (username, date, item, expiry, lot_size, no_of_lot, buy_qty, buy_price, buy_net_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
       values = [username, date, item, expiry, lotsize, numberlot, buyqty, buyprice, net_buy_price];
-      console.log(values)
     }
   
     const [result] = await connection.query<ResultSetHeader>(query, values);
-    // const insertId = result.insertId;
+    const insertId = result.insertId;
   
     console.log("Inserted trade with ID:", result);
-    return NextResponse.json({ message: 'Trade saved successfully', tradeId: result }, { status: 201 });
+    return NextResponse.json({ message: 'Trade saved successfully', tradeId: insertId }, { status: 201 });
 
 
   } catch (error: any) {

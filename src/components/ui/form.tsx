@@ -113,7 +113,7 @@ const Form: React.FC = () => {
               Number of lot: <input name="numberlot" type="number" value={formData.numberlot} onChange={handleChange} />
             </label>
             <label className="buyqty">
-              Buy quantity: <input name="buyqty" type="number" value={formData.buyqty} onChange={handleChange} defaultValue={formData.buyqty} />
+              Buy quantity: <input name="buyqty" type="number" value={formData.buyqty} onChange={handleChange} />
             </label>
             <label className="buyprice">
               Buy price: <input name="buyprice" type="number" step="0.01" value={formData.buyprice} onChange={handleChange} />
