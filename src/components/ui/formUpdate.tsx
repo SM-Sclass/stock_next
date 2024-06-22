@@ -1,9 +1,9 @@
-"use client";
-
-import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import "../../app/globals.css";
+"use client"
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+// import "../app/globals.css";
 
 interface FormData {
+  id: number;
   username: string;
   date: string;
   item: string;
@@ -17,35 +17,50 @@ interface FormData {
 }
 
 const Form: React.FC = () => {
-  const [currentDate, setCurrentDate] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<{ id: number; username: string }[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [formData, setFormData] = useState<FormData>({
-    username: "",
-    date: "",
-    item: "",
-    expiry: "",
-    lotsize: "",
-    numberlot: "",
+    id: 0,
+    username: '',
+    date: '',
+    item: '',
+    expiry: '',
+    lotsize: '',
+    numberlot: '',
     buyqty: 0,
-    sellqty: "",
-    sellprice: "",
-    buyprice: ""
+    sellqty: '',
+    sellprice: '',
+    buyprice: ''
   });
 
   useEffect(() => {
-    const today = new Date();
-    const formattedDate = today.toISOString().substr(0, 10);
-    setCurrentDate(formattedDate);
-    setFormData((prevData) => ({ ...prevData, date: formattedDate }));
-  }, []);
+    const fetchSearchResults = async () => {
+      if (searchQuery.length > 2) {
+        const response = await fetch(`/api/searchusers?q=${searchQuery}`);
+        const data = await response.json();
+        console.log("THIS IS DATA" ,data)
+        setSearchResults(data);
+      } else {
+        setSearchResults([]);
+      }
+    };
+
+    fetchSearchResults();
+  }, [searchQuery]);
 
   useEffect(() => {
-    const lotsize = parseFloat(formData.lotsize) || 0;
-    const numberlot = parseFloat(formData.numberlot) || 0;
-    setFormData((prevData) => ({
-      ...prevData,
-      buyqty: lotsize * numberlot
-    }));
-  }, [formData.lotsize, formData.numberlot]);
+    
+      const fetchUserData = async () => {
+        const response = await fetch(`/api/user?id=${selectedUserId}`);
+        const data = await response.json();
+        console.log("THIS IS RESPONSE" , data)
+        setFormData(data);
+      };
+
+      fetchUserData();
+    
+  }, [selectedUserId]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -53,9 +68,8 @@ const Form: React.FC = () => {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    
+    e.preventDefault();
 
-    // Check if any required field is empty
     const requiredFields: (keyof FormData)[] = ["username", "date", "item", "expiry", "lotsize", "numberlot", "buyqty", "buyprice"];
     for (let key of requiredFields) {
       if (formData[key] === "") {
@@ -73,7 +87,7 @@ const Form: React.FC = () => {
       sellprice: formData.sellprice === "" ? 0 : parseFloat(formData.sellprice)
     };
 
-    const response = await fetch('/api/savetrade', {
+    const response = await fetch('/api/update', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -93,6 +107,24 @@ const Form: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <div className="row">
             <label className="user">
+              Search Username:
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search for a username"
+              />
+              {searchResults.length > 0 && (
+                <ul className='bg-black text-white'>
+                  {searchResults.map((user) => (
+                    <li className='border' key={user.id} onClick={() => setSelectedUserId(user.id)}>
+                      {user.username}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </label>
+            <label className="username">
               Username:
               <input name="username" type="text" value={formData.username} onChange={handleChange} />
             </label>
@@ -132,6 +164,6 @@ const Form: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Form;
