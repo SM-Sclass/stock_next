@@ -3,7 +3,7 @@ import connectDB from '@/lib/db';
 import { NextRequest , NextResponse} from 'next/server';
 import { sell_net_price, buy_net_price } from '@/helpers/net_price';
 import { ResultSetHeader } from 'mysql2';
-import { validateHeaderValue } from 'http';
+
 export async function GET(req:NextRequest) {
   
     
