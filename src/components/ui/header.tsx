@@ -9,7 +9,7 @@ function Header() {
     <div className="img1">
       <div className="body w-full">
         <div className="text">
-          <h2>Trading Bill</h2> 
+          <h1>Trading Bill</h1> 
         </div>
         <div className="login1">
           <h2><Link href="/live" className="Live">Live</Link></h2>
@@ -19,43 +19,7 @@ function Header() {
           <div className="w-auto">
             <Navbar/>
           </div>
-            
-          {/* <div className="Home">
-          <Link href="/" className="Home1 hover:bg-slate-800 w-10"> <Button className="">Home</Button></Link>
           
-          </div>
-          <div className="Person">
-            <label>Person</label>
-            <select name="name" className="select-box">
-              <option>name</option>
-              <option>Arun</option>
-              <option>Vinit</option>
-              <option>Vedansh</option>
-            </select>
-          </div>
-          <div className="Bill">
-            <select name="Bill" className="select-box">
-              <option>Bill</option>
-              <option>weekly Bill</option>
-              <option>monthly Bill</option>
-            </select>
-          </div>
-          <div className="Ledgers">
-            <label>Ledgers</label>
-            <select name="Ledgers" className="select-box">
-              <option>name</option>
-              <option>Arun</option>
-              <option>Vinit</option>
-              <option>Vedansh</option>
-            </select>
-          </div>
-          <div className="Sentbill">
-            <label>Sent via</label>
-            <select name="bill" className="select-box">
-              <option>WhatsApp</option>
-              <option>SMS</option>
-            </select>
-          </div> */}
         
         </div>
       </div>
