@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    background-color: #000000;
     margin: 0;
     padding: 0;
 }
@@ -9,7 +9,7 @@ body {
 /* Header styles */
 
 h1 {
-    color: #333;
+    color: #f4f4f4;
     text-align: center;
     margin-top: 20px;
     font-size: 24px;
@@ -138,6 +138,21 @@ ul.search-results li:last-child {
 .stock-box.price-decrease {
     background-color: #ba0101;
     /* Light red */
+}
+
+.futuretetxt {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 100px;
+}
+
+.futurestock {
+    text-align: center;
+    border: solid black;
+    border-width: 1px;
+    border-radius: 50px;
+    background-color: #ba0101;
+    color: white;
 }
 
 @media (max-width: 767px) {

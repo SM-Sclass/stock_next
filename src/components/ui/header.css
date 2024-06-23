@@ -14,12 +14,12 @@
 .text {
     display: flex;
     justify-content: center;
-    font-size: x-large;
     font-family: "Sedan SC", serif;
     font-weight: 400;
     color: black;
     text-shadow: 12px 0px 10px rgba(0, 0, 0, 0.5), -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
     margin-bottom: 20px;
+    font-size: 40px;
 }
 
 .butten {
@@ -28,29 +28,6 @@
     justify-content: space-evenly;
     width: 100%;
     gap: 10px;
-    
-}
-
-.Person,
-.Bill,
-.Ledgers,
-.Sentbill {
-    display: flex;
-    align-items: center;
-    font-family: "Cabin", sans-serif;
-    background-color: black;
-    color: white;
-    margin: 5px;
-    padding: 5px;
-    border-radius: 5px;
-}
-
-.select-box {
-    width: 100px;
-    font-size: 14px;
-    background-color: gray;
-    margin-left: 5px;
-    border-radius: 5px;
 }
 
 .login1 {
