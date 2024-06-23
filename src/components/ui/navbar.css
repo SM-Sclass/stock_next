@@ -7,8 +7,8 @@ body {
     position: relative;
     height: 50px;
     background: #527393;
-    border-radius: 8px;
-    font-size: 0;
+    border-radius: 10px;
+    font-size: 20px;
 }
 
 .nav a {
@@ -30,7 +30,7 @@ body {
     top: 0;
     z-index: 0;
     background: #1abc9c;
-    border-radius: 8px;
+    border-radius: 10px;
     transition: all .4s ease 0s;
 }
 
@@ -71,15 +71,36 @@ body {
 }
 
 .nav a:nth-child(4):hover~.animation {
-    width: 160px;
+    width: 120px;
     left: 310px;
 }
 
 .nav a:nth-child(5) {
     width: 120px;
+    background-color: transparent;
 }
 
 .nav a:nth-child(5):hover~.animation {
+    width: 120px;
+    left: 470px;
+}
+
+.nav a:nth-child(6) {
+    width: 120px;
+    background-color: transparent;
+}
+
+.nav a:nth-child(6):hover~.animation {
+    width: 120px;
+    left: 470px;
+}
+
+.nav a:nth-child(7) {
+    width: 120px;
+    background-color: transparent;
+}
+
+.nav a:nth-child(7):hover~.animation {
     width: 120px;
     left: 470px;
 }
