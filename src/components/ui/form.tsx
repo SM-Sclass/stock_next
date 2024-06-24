@@ -53,9 +53,6 @@ const Form: React.FC = () => {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    
-
-    // Check if any required field is empty
     const requiredFields: (keyof FormData)[] = ["username", "date", "item", "expiry", "lotsize", "numberlot", "buyqty", "buyprice"];
     for (let key of requiredFields) {
       if (formData[key] === "") {
@@ -81,7 +78,7 @@ const Form: React.FC = () => {
       body: JSON.stringify(dataToSubmit),
     });
 
-    console.log(response);
+    console.log("THIS",response);
   };
 
   return (

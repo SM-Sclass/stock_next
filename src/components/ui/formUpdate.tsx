@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
-// import "../app/globals.css";
+
 
 interface FormData {
   id: number;
@@ -35,30 +35,75 @@ const Form: React.FC = () => {
   });
 
   useEffect(() => {
-    const fetchSearchResults = async () => {
-      if (searchQuery.length > 2) {
-        const response = await fetch(`/api/searchusers?q=${searchQuery}`);
-        const data = await response.json();
-        console.log("THIS IS DATA" ,data)
-        setSearchResults(data);
-      } else {
-        setSearchResults([]);
-      }
-    };
+    if(searchQuery)
+      {
 
-    fetchSearchResults();
+        const fetchSearchResults = async () => {
+          if (searchQuery.length > 2) {
+            const response = await fetch(`/api/searchusers?q=${searchQuery}`);
+            const data = await response.json();
+            console.log("THIS IS DATA" ,data)
+            setSearchResults(data);
+          } else {
+            setSearchResults([]);
+          }
+        };
+        
+        fetchSearchResults();
+      }
   }, [searchQuery]);
 
   useEffect(() => {
-    
-      const fetchUserData = async () => {
-        const response = await fetch(`/api/user?id=${selectedUserId}`);
-        const data = await response.json();
-        console.log("THIS IS RESPONSE" , data)
-        setFormData(data);
-      };
+    if(selectedUserId)
+      {
 
-      fetchUserData();
+        const fetchUserData = async () => {
+          try {
+            
+            
+            const response = await fetch(`/api/user?id=${selectedUserId}`);
+            const data = await response.json();
+            console.log("THIS IS RESPONSE" , data)
+            data.date = data.date.split('T')[0];
+            data.expiry = data.expiry.split('T')[0];
+            console.log(data.date)
+            console.log(data.expiry)
+            // setFormData(data)
+            setFormData({...formData,
+                id:data.id.toString(),
+                username:data.username,
+                date: data.date.split('T')[0],
+                item:data.item,
+                expiry:data.expiry.split('T')[0],
+                lotsize:data.lot_size.toString(),
+                numberlot:data.no_of_lot.toString(),
+                buyqty:data.buy_qty,
+                buyprice:data.buy_price,
+                sellqty:data.sell_qty ? data.sell_qty.toString() : '',
+                sellprice:data.sell_price ? data.sell_price.toString() : '',
+            });
+            const dataToSubmit = {
+              ...formData,
+              lotsize: parseFloat(formData.lotsize),
+              numberlot: parseFloat(formData.numberlot),
+              buyprice: parseFloat(formData.buyprice),
+              sellqty: formData.sellqty === "" ? 0 : parseFloat(formData.sellqty),
+              sellprice: formData.sellprice === "" ? 0 : parseFloat(formData.sellprice)
+            };
+          
+          console.log("This is form date" , formData.username)
+          // setFormData({...formData ,date:formattedDate })
+          // setFormData({...formData ,expiry:expiryDate })
+          console.log("This is Formdata" , formData)
+        } 
+          catch (error) {
+            console.error("Error fetching user data:", error);
+        }
+        
+      };
+      
+        fetchUserData();
+      }
     
   }, [selectedUserId]);
 
