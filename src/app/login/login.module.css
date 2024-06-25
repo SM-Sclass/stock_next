@@ -1,0 +1,145 @@
+/* login.module.css */
+
+.topBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #b8d7f7;
+}
+
+.allBox {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transform: translateZ(0);
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+
+.allBox:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+.signText {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333333;
+}
+
+.spaceY6 {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.loginPageBox {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.emailBox,
+.passwordBox {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #c0dffe;
+    transition: border-color 0.3s ease-out;
+}
+
+.emailBox:focus,
+.passwordBox:focus {
+    border-color: #007bff;
+}
+
+.fullWidthButton {
+    width: 100%;
+    padding: 1rem;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-out;
+}
+
+.fullWidthButton:hover {
+    background-color: #0056b3;
+}
+
+.registerAccount {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.divider {
+    border-top: 1px solid #ced4da;
+    margin: 1.5rem 0;
+}
+
+.googleSignInSection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.googleButton {
+    background-color: #ffffff;
+    color: #333333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 50px;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    transition: all 0.3s ease-out;
+}
+
+.googleButton:hover {
+    background-color: #f1f1f1;
+    color: #007bff;
+    transform: translateY(-2px);
+}
+
+.googleIcon {
+    margin-right: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.googleButtonText {
+    font-size: 1rem;
+}
+
+
+/* Mobile responsiveness */
+
+@media (max-width: 600px) {
+    .allBox {
+        padding: 15px;
+    }
+    .signText {
+        font-size: 1.5rem;
+    }
+    .spaceY6 {
+        gap: 1rem;
+    }
+    .emailBox,
+    .passwordBox {
+        padding: 0.75rem;
+    }
+    .fullWidthButton {
+        padding: 0.75rem;
+    }
+    .googleButton {
+        padding: 0.75rem 1rem;
+    }
+    .googleButtonText {
+        font-size: 0.875rem;
+    }
+}

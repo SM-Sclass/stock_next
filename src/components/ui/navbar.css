@@ -34,6 +34,15 @@ body {
     transition: all .4s ease 0s;
 }
 
+.sentbill {
+    margin-right: -20px;
+    margin-left: -20px;
+}
+
+.live {}
+
+.login1 {}
+
 .nav a:nth-child(1) {
     width: 100px;
     background-color: transparent;
@@ -92,7 +101,7 @@ body {
 
 .nav a:nth-child(6):hover~.animation {
     width: 120px;
-    left: 470px;
+    left: 570px;
 }
 
 .nav a:nth-child(7) {
@@ -102,5 +111,5 @@ body {
 
 .nav a:nth-child(7):hover~.animation {
     width: 120px;
-    left: 470px;
+    left: 670px;
 }

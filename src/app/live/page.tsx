@@ -211,7 +211,7 @@ export default function Live() {
     <>
       <h1>{marketOpen ? "Market is open ❤️" : "Market is closed 💔"}</h1>
       <form onSubmit={handleSearchSubmit} className="search-form">
-        <label htmlFor="search-input">Enter stock symbol:</label>
+        <label className="symbol" htmlFor="search-input">Enter stock symbol:</label>
         <input
           type="text"
           id="search-input"
