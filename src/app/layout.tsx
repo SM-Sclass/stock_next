@@ -20,10 +20,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="w-full h-dvh bg-black">
           <Header/>
-          {children}
-        </div>  
+          {children}    
       </body>
     </html>
   );
