@@ -40,6 +40,10 @@ form.search-form input[type="text"] {
     margin-right: 10px;
 }
 
+.symbol {
+    color: white;
+}
+
 form.search-form button {
     padding: 10px 20px;
     font-size: 16px;
@@ -148,11 +152,11 @@ ul.search-results li:last-child {
 
 .futurestock {
     text-align: center;
-    border: solid black;
+    border: solid rgb(255, 255, 255);
     border-width: 1px;
     border-radius: 50px;
-    background-color: #ba0101;
-    color: white;
+    background-color: #787878a8;
+    color: rgb(255, 255, 255);
 }
 
 @media (max-width: 767px) {

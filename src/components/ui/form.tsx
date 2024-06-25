@@ -3,6 +3,7 @@
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import "../../app/globals.css";
 
+
 interface FormData {
   username: string;
   date: string;
@@ -82,6 +83,7 @@ const Form: React.FC = () => {
   };
 
   return (
+    <div className="outerbox">
     <div className="box">
       <div className="text1">
         <h1>Trading details</h1>
@@ -127,6 +129,7 @@ const Form: React.FC = () => {
           </div>
         </form>
       </div>
+    </div>
     </div>
   );
 }
