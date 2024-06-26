@@ -24,7 +24,7 @@ const Navbar = (props: Props) => {
         <Link href="/bill" className='text-white' onClick={() => handleClick('100px', '210px')}>Bill</Link>
       </Button>
       <Button className='sentbill' variant="ghost" asChild>
-        <Link href="/ledger" className='text-white' onClick={() => handleClick('160px', '310px')}>Sent Bill</Link>
+        <Link href="/ledger" className='text-white' onClick={() => handleClick('160px', '310px')}>SentBill</Link>
       </Button>
       <Button className='live' variant="ghost" asChild>
         <Link href="/live" className='text-white' onClick={() => handleClick('120px', '470px')}>Live</Link>
