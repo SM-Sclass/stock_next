@@ -8,7 +8,7 @@ function Bill() {
 
     const handleSearch = () => {
         console.log("Searching for:", query);
-        // Add your search logic here
+        // Add your search logic here see sumit 
     };
 
     return (
