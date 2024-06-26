@@ -169,36 +169,36 @@ const Form: React.FC = () => {
                 </ul>
               )}
             </label>
-            <label className="username">
+            <label className="username" htmlFor="username">
               Username:
               <input name="username" type="text" value={formData.username} onChange={handleChange} />
             </label>
-            <label className="date">
+            <label className="date" htmlFor="date">
               Date:
               <input name="date" type="date" value={formData.date} onChange={handleChange} />
             </label>
-            <label className="item">
+            <label className="item" htmlFor="item">
               Item: <input name="item" type="text" value={formData.item} onChange={handleChange} />
             </label>
-            <label className="expiry">
+            <label className="expiry" htmlFor="expiry">
               Expiry: <input name="expiry" type="date" value={formData.expiry} onChange={handleChange} />
             </label>
-            <label className="lotsize">
+            <label className="lotsize" htmlFor="lotsize">
               Lot size: <input name="lotsize" type="number" value={formData.lotsize} onChange={handleChange} />
             </label>
-            <label className="numberlot">
+            <label className="numberlot" htmlFor="numberlot">
               Number of lot: <input name="numberlot" type="number" value={formData.numberlot} onChange={handleChange} />
             </label>
-            <label className="buyqty">
+            <label className="buyqty" htmlFor="buyqty">
               Buy quantity: <input name="buyqty" type="number" value={formData.buyqty} onChange={handleChange} />
             </label>
-            <label className="buyprice">
+            <label className="buyprice" htmlFor="buyprice">
               Buy price: <input name="buyprice" type="number" step="0.01" value={formData.buyprice} onChange={handleChange} />
             </label>
-            <label className="sell">
+            <label className="sell" htmlFor="sellqty">
               Sell quantity: <input name="sellqty" type="number" value={formData.sellqty} onChange={handleChange} />
             </label>
-            <label className="sellprice">
+            <label className="sellprice" htmlFor="sellprice">
               Sell price: <input name="sellprice" type="number" step="0.01" value={formData.sellprice} onChange={handleChange} />
             </label>
             <div className="submit1">
