@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+ES+Deco:wght@100..400&display=swap');
+.bill-container {
+    padding: 20px;
+    text-align: center;
+}
+
+.search-container {
+    margin-top: 20px;
+}
+
+.Billtext {
+    font-size: 50px;
+    font-family: "Playwrite ES Deco", cursive;
+    font-optical-sizing: auto;
+}
+
+.search-input {
+    padding: 10px;
+    font-size: 16px;
+    width: 200px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 50px;
+}
+
+.search-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
