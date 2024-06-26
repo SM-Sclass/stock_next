@@ -21,7 +21,10 @@ body {
     z-index: 1;
     display: inline-block;
     text-align: center;
-    margin-top: -5px;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0 15px;
+    /* Padding added for better spacing */
 }
 
 .nav .animation {
@@ -39,19 +42,9 @@ body {
     margin-left: -20px;
 }
 
-.live {}
-
-.login1 {}
-
 .nav a:nth-child(1) {
     width: 100px;
     background-color: transparent;
-}
-
-.nav .start-home,
-.nav a:nth-child(1):hover~.animation {
-    width: 100px;
-    left: 0;
 }
 
 .nav a:nth-child(2) {
@@ -59,19 +52,9 @@ body {
     background-color: transparent;
 }
 
-.nav a:nth-child(2):hover~.animation {
-    width: 110px;
-    left: 100px;
-}
-
 .nav a:nth-child(3) {
     width: 100px;
     background-color: transparent;
-}
-
-.nav a:nth-child(3):hover~.animation {
-    width: 100px;
-    left: 210px;
 }
 
 .nav a:nth-child(4) {
@@ -79,19 +62,9 @@ body {
     background-color: transparent;
 }
 
-.nav a:nth-child(4):hover~.animation {
-    width: 120px;
-    left: 310px;
-}
-
 .nav a:nth-child(5) {
     width: 120px;
     background-color: transparent;
-}
-
-.nav a:nth-child(5):hover~.animation {
-    width: 120px;
-    left: 470px;
 }
 
 .nav a:nth-child(6) {
@@ -99,17 +72,7 @@ body {
     background-color: transparent;
 }
 
-.nav a:nth-child(6):hover~.animation {
-    width: 120px;
-    left: 570px;
-}
-
 .nav a:nth-child(7) {
     width: 120px;
     background-color: transparent;
-}
-
-.nav a:nth-child(7):hover~.animation {
-    width: 120px;
-    left: 670px;
 }
