@@ -1,17 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Playwrite+ES+Deco:wght@100..400&display=swap');
 .bill-container {
-    padding: 20px;
+    padding: 10px;
     text-align: center;
 }
 
 .search-container {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .Billtext {
     font-size: 50px;
     font-family: "Playwrite ES Deco", cursive;
     font-optical-sizing: auto;
+    border: 2px soild black;
 }
 
 .search-input {
@@ -36,4 +37,50 @@
 
 .search-button:hover {
     background-color: #0056b3;
+}
+
+.table-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 0.01px;
+    background-color: #ccc;
+    margin-top: 30px;
+    border: 1px solid #ccc;
+}
+
+.exclebox {
+    margin: 60px;
+}
+
+.table-header,
+.table-cell {
+    background-color: white;
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ccc;
+    min-height: 30px;
+    word-wrap: break-word;
+}
+
+.table-header {
+    background-color: #f0f0f0;
+}
+
+.table-row {
+    display: contents;
+}
+
+.user {
+    border: 2px soild black;
+}
+
+@media (max-width: 768px) {
+    .table-container {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+    .table-header,
+    .table-cell {
+        font-size: 14px;
+        /* Adjust font size for smaller screens */
+    }
 }

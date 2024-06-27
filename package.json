@@ -34,6 +34,7 @@
     "sequelize": "^6.37.3",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "xlsx": "^0.18.5",
     "yahoo-finance2": "^2.11.3"
   },
   "devDependencies": {
