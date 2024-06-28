@@ -205,7 +205,7 @@ function Bill() {
               <div className="table-cell">{results.username}</div>
               <div className="table-cell">{results.item}</div>
               <div className="table-cell">{cutFormatDate(results.date)}</div>
-              <div className="table-cell">{results.expiry}</div>
+              <div className="table-cell">{cutFormatDate(results.expiry)}</div>
               <div className="table-cell">{results.lot_size}</div>
               <div className="table-cell">{results.no_of_lot}</div>
               <div className="table-cell">{results.buy_qty}</div>
