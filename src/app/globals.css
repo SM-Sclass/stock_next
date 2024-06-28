@@ -13,6 +13,13 @@
     padding: 20px;
     max-width: 800px;
     margin: auto;
+    border: black solid;
+    border-radius: 10px;
+    border-width: 0.5px;
+}
+
+.bg-white {
+    background-color: rgb(70, 70, 70);
 }
 
 .row {

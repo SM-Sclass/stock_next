@@ -16,27 +16,46 @@
 }
 
 .search-input {
-    padding: 10px;
+    padding: 5px;
     font-size: 16px;
     width: 200px;
     margin-right: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #000000;
     border-radius: 4px;
-    margin-left: 50px;
+    margin-left: 10px;
 }
 
 .search-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
     cursor: pointer;
+    margin-top: 20px;
+    border: solid black 2px;
+    border-radius: 5px;
+}
+
+.generate {
+    margin: 10px;
+}
+
+.datebox {
+    border: solid black 2px;
+    width: 20%;
+    border-radius: 5px;
+}
+
+.dateouterbox {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -34px;
+    margin-right: 25%;
+    font-size: 109%;
+}
+
+.inputdate {
+    margin-right: 10px;
 }
 
 .search-button:hover {
-    background-color: #0056b3;
+    background-color: #00db21;
 }
 
 .table-container {
@@ -50,6 +69,27 @@
 
 .exclebox {
     margin: 60px;
+}
+
+.excel {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.exporttoexcel {
+    background-color: rgba(0, 128, 0, 0.603);
+    border: black 2px solid;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.boxofbill {
+    border: black 2px solid;
+    margin-left: 90px;
+    margin-right: 90px;
+    border-radius: 5px;
 }
 
 .table-header,
@@ -72,6 +112,11 @@
 
 .user {
     border: 2px soild black;
+    margin-right: 30%;
+}
+
+.searchtext {
+    margin-right: 300px;
 }
 
 @media (max-width: 768px) {
