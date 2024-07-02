@@ -11,7 +11,6 @@ import {
   TextField,
   Grid,
   FormControl,
-  colors,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
@@ -32,7 +31,7 @@ interface FormData {
 const Form: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     username: "",
-    date:  dayjs(),
+    date: dayjs(),
     item: "",
     expiry: null,
     lotsize: "",
@@ -58,6 +57,8 @@ const Form: React.FC = () => {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
     const requiredFields: (keyof FormData)[] = [
       "username",
       "date",
@@ -68,8 +69,9 @@ const Form: React.FC = () => {
       "buyqty",
       "buyprice",
     ];
+
     for (let key of requiredFields) {
-      if (formData[key] === "") {
+      if (formData[key] === "" || formData[key] === null) {
         alert(`Please fill out the ${key} field.`);
         return;
       }
@@ -77,8 +79,8 @@ const Form: React.FC = () => {
 
     const dataToSubmit = {
       ...formData,
-      date: formData.date.format('YYYY-mm-dd'), // todo check format
-      expiry: formData.expiry?.format('YYYy-mm-dd'),
+      date: formData.date.format('YYYY-MM-DD'),
+      expiry: formData.expiry?.format('YYYY-MM-DD') || null,
       lotsize: parseFloat(formData.lotsize),
       numberlot: parseFloat(formData.numberlot),
       buyprice: parseFloat(formData.buyprice),
@@ -94,19 +96,24 @@ const Form: React.FC = () => {
       body: JSON.stringify(dataToSubmit),
     });
 
-    console.log("THIS", response);
+    if (response.ok) {
+      alert("Form submitted successfully");
+    } else {
+      alert("Failed to submit the form");
+    }
   };
 
   return (
-    <Box sx={{ display: "flex", width: "100%", justifyContent: " center" }}>
+    <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
       <Box maxWidth={"md"}>
         <Card elevation={4}>
-          <CardHeader>Trading details</CardHeader>
+          <CardHeader title="Trading details" />
           <CardContent>
             <Box component={"form"} onSubmit={handleSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth
+                  <TextField
+                    fullWidth
                     label="Username"
                     name="username"
                     type="text"
@@ -116,17 +123,18 @@ const Form: React.FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
-                     <DatePicker
-                    label="Date"
-                    name="date"
-                    value={formData.date} 
-                    onChange={(e)=>setFormData((prevData) => ({ ...prevData, date: e as Dayjs }))}
-                 
-                  />
+                    <DatePicker
+                      label="Date"
+                      value={formData.date}
+                      onChange={(date) =>
+                        setFormData((prevData) => ({ ...prevData, date: date as Dayjs }))
+                      }
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth
+                  <TextField
+                    fullWidth
                     label="Item"
                     name="item"
                     type="text"
@@ -135,15 +143,19 @@ const Form: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <DatePicker 
-                   name='expiry'
-                  label='Expiry'
-                  value={formData.expiry}
-                  onChange={(e)=>setFormData((prevData) => ({ ...prevData, expiry: e as Dayjs }))}
-                  />
+                  <FormControl fullWidth>
+                    <DatePicker
+                      label="Expiry"
+                      value={formData.expiry}
+                      onChange={(date) =>
+                        setFormData((prevData) => ({ ...prevData, expiry: date as Dayjs }))
+                      }
+                    />
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth
+                  <TextField
+                    fullWidth
                     label="Lot size"
                     name="lotsize"
                     type="number"
@@ -152,7 +164,8 @@ const Form: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth
+                  <TextField
+                    fullWidth
                     label="No of lot"
                     name="numberlot"
                     type="number"
@@ -161,25 +174,30 @@ const Form: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth
+                  <TextField
+                    fullWidth
                     label="Buy quantity"
                     name="buyqty"
                     type="number"
                     value={formData.buyqty}
-                    onChange={handleChange}
+                    InputProps={{
+                      readOnly: true,
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth
+                  <TextField
+                    fullWidth
                     label="Buy price"
                     name="buyprice"
                     type="number"
-                    /*step="0.01"*/ value={formData.buyprice}
+                    value={formData.buyprice}
                     onChange={handleChange}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth
+                  <TextField
+                    fullWidth
                     label="Sell quantity"
                     name="sellqty"
                     type="number"
@@ -188,17 +206,18 @@ const Form: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <TextField fullWidth
+                  <TextField
+                    fullWidth
                     label="Sell price"
                     name="sellprice"
                     type="number"
-                    /*step="0.01"*/ value={formData.sellprice}
+                    value={formData.sellprice}
                     onChange={handleChange}
                   />
                 </Grid>
               </Grid>
-              <Box sx={{ pt: 2,display: "flex", width: "100%", justifyContent: " center" }}>
-                <Button className="submit" type="submit" variant='contained' color='success'>
+              <Box sx={{ pt: 2, display: "flex", width: "100%", justifyContent: "center" }}>
+                <Button className="submit" type="submit" variant="contained" color="success">
                   Submit
                 </Button>
               </Box>
