@@ -12,6 +12,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  FormControl,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -183,17 +184,19 @@ const Form: React.FC = () => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <DatePicker
-                      label="Date"
-                      value={dayjs(formData.date)}
-                      onChange={(date) =>
-                        setFormData((prevData) => ({
-                          ...prevData,
-                          date: (date as Dayjs).format("YYYY-MM-DD"),
-                        }))
-                      }
-                      renderInput={(params) => <TextField {...params} fullWidth />}
-                    />
+                    <FormControl fullWidth>
+                      <DatePicker
+                        label="Date"
+                        value={dayjs(formData.date)}
+                        onChange={(date) =>
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            date: (date as Dayjs).format("YYYY-MM-DD"),
+                          }))
+                        }
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -205,17 +208,19 @@ const Form: React.FC = () => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
-                    <DatePicker
-                      label="Expiry"
-                      value={dayjs(formData.expiry)}
-                      onChange={(date) =>
-                        setFormData((prevData) => ({
-                          ...prevData,
-                          expiry: (date as Dayjs).format("YYYY-MM-DD"),
-                        }))
-                      }
-                      renderInput={(params) => <TextField {...params} fullWidth />}
-                    />
+                    <FormControl fullWidth>
+                      <DatePicker
+                        label="Expiry"
+                        value={dayjs(formData.expiry)}
+                        onChange={(date) =>
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            expiry: (date as Dayjs).format("YYYY-MM-DD"),
+                          }))
+                        }
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </FormControl>
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
