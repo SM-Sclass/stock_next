@@ -2,13 +2,25 @@
 
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import "../../app/globals.css";
-
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  TextField,
+  Grid,
+  FormControl,
+  colors,
+} from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs, { Dayjs } from "dayjs";
 
 interface FormData {
   username: string;
-  date: string;
+  date: Dayjs;
   item: string;
-  expiry: string;
+  expiry: Dayjs | null;
   lotsize: string;
   numberlot: string;
   buyqty: number;
@@ -18,33 +30,25 @@ interface FormData {
 }
 
 const Form: React.FC = () => {
-  const [currentDate, setCurrentDate] = useState<string>("");
   const [formData, setFormData] = useState<FormData>({
     username: "",
-    date: "",
+    date:  dayjs(),
     item: "",
-    expiry: "",
+    expiry: null,
     lotsize: "",
     numberlot: "",
     buyqty: 0,
     sellqty: "",
     sellprice: "",
-    buyprice: ""
+    buyprice: "",
   });
-
-  useEffect(() => {
-    const today = new Date();
-    const formattedDate = today.toISOString().substr(0, 10);
-    setCurrentDate(formattedDate);
-    setFormData((prevData) => ({ ...prevData, date: formattedDate }));
-  }, []);
 
   useEffect(() => {
     const lotsize = parseFloat(formData.lotsize) || 0;
     const numberlot = parseFloat(formData.numberlot) || 0;
     setFormData((prevData) => ({
       ...prevData,
-      buyqty: lotsize * numberlot
+      buyqty: lotsize * numberlot,
     }));
   }, [formData.lotsize, formData.numberlot]);
 
@@ -54,7 +58,16 @@ const Form: React.FC = () => {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    const requiredFields: (keyof FormData)[] = ["username", "date", "item", "expiry", "lotsize", "numberlot", "buyqty", "buyprice"];
+    const requiredFields: (keyof FormData)[] = [
+      "username",
+      "date",
+      "item",
+      "expiry",
+      "lotsize",
+      "numberlot",
+      "buyqty",
+      "buyprice",
+    ];
     for (let key of requiredFields) {
       if (formData[key] === "") {
         alert(`Please fill out the ${key} field.`);
@@ -64,74 +77,137 @@ const Form: React.FC = () => {
 
     const dataToSubmit = {
       ...formData,
+      date: formData.date.format('YYYY-mm-dd'), // todo check format
+      expiry: formData.expiry?.format('YYYy-mm-dd'),
       lotsize: parseFloat(formData.lotsize),
       numberlot: parseFloat(formData.numberlot),
       buyprice: parseFloat(formData.buyprice),
       sellqty: formData.sellqty === "" ? 0 : parseFloat(formData.sellqty),
-      sellprice: formData.sellprice === "" ? 0 : parseFloat(formData.sellprice)
+      sellprice: formData.sellprice === "" ? 0 : parseFloat(formData.sellprice),
     };
 
-    const response = await fetch('/api/savetrade', {
-      method: 'POST',
+    const response = await fetch("/api/savetrade", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(dataToSubmit),
     });
 
-    console.log("THIS",response);
+    console.log("THIS", response);
   };
 
   return (
-    <div className="outerbox">
-    <div className="box">
-      <div className="text1">
-        <h1>Trading details</h1>
-      </div>
-      <div className="inputbox">
-        <form onSubmit={handleSubmit}>
-          <div className="row">
-            <label className="user">
-              Username:
-              <input name="username" type="text" value={formData.username} onChange={handleChange} />
-            </label>
-            <label className="date">
-              Date:
-              <input name="date" type="date" value={formData.date} onChange={handleChange} />
-            </label>
-            <label className="item">
-              Item: <input name="item" type="text" value={formData.item} onChange={handleChange} />
-            </label>
-            <label className="expiry">
-              Expiry: <input name="expiry" type="date" value={formData.expiry} onChange={handleChange} />
-            </label>
-            <label className="lotsize">
-              Lot size: <input name="lotsize" type="number" value={formData.lotsize} onChange={handleChange} />
-            </label>
-            <label className="numberlot">
-              Number of lot: <input name="numberlot" type="number" value={formData.numberlot} onChange={handleChange} />
-            </label>
-            <label className="buyqty">
-              Buy quantity: <input name="buyqty" type="number" value={formData.buyqty} onChange={handleChange} />
-            </label>
-            <label className="buyprice">
-              Buy price: <input name="buyprice" type="number" step="0.01" value={formData.buyprice} onChange={handleChange} />
-            </label>
-            <label className="sell">
-              Sell quantity: <input name="sellqty" type="number" value={formData.sellqty} onChange={handleChange} />
-            </label>
-            <label className="sellprice">
-              Sell price: <input name="sellprice" type="number" step="0.01" value={formData.sellprice} onChange={handleChange} />
-            </label>
-            <div className="submit1">
-              <button className="submit" type="submit">Submit</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-    </div>
+    <Box sx={{ display: "flex", width: "100%", justifyContent: " center" }}>
+      <Box maxWidth={"md"}>
+        <Card elevation={4}>
+          <CardHeader>Trading details</CardHeader>
+          <CardContent>
+            <Box component={"form"} onSubmit={handleSubmit}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth
+                    label="Username"
+                    name="username"
+                    type="text"
+                    value={formData.username}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                     <DatePicker
+                    label="Date"
+                    name="date"
+                    value={formData.date} 
+                    onChange={(e)=>setFormData((prevData) => ({ ...prevData, date: e as Dayjs }))}
+                 
+                  />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth
+                    label="Item"
+                    name="item"
+                    type="text"
+                    value={formData.item}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <DatePicker 
+                   name='expiry'
+                  label='Expiry'
+                  value={formData.expiry}
+                  onChange={(e)=>setFormData((prevData) => ({ ...prevData, expiry: e as Dayjs }))}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth
+                    label="Lot size"
+                    name="lotsize"
+                    type="number"
+                    value={formData.lotsize}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth
+                    label="No of lot"
+                    name="numberlot"
+                    type="number"
+                    value={formData.numberlot}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth
+                    label="Buy quantity"
+                    name="buyqty"
+                    type="number"
+                    value={formData.buyqty}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth
+                    label="Buy price"
+                    name="buyprice"
+                    type="number"
+                    /*step="0.01"*/ value={formData.buyprice}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth
+                    label="Sell quantity"
+                    name="sellqty"
+                    type="number"
+                    value={formData.sellqty}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField fullWidth
+                    label="Sell price"
+                    name="sellprice"
+                    type="number"
+                    /*step="0.01"*/ value={formData.sellprice}
+                    onChange={handleChange}
+                  />
+                </Grid>
+              </Grid>
+              <Box sx={{ pt: 2,display: "flex", width: "100%", justifyContent: " center" }}>
+                <Button className="submit" type="submit" variant='contained' color='success'>
+                  Submit
+                </Button>
+              </Box>
+            </Box>
+          </CardContent>
+        </Card>
+      </Box>
+    </Box>
   );
-}
+};
 
 export default Form;

@@ -10,6 +10,11 @@
     align-items: center;
 }
 
+.whitebox {
+    width: 100px;
+    color: black;
+}
+
 .input-field,
 .textarea-field {
     padding: 10px;

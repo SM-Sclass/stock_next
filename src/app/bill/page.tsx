@@ -1,19 +1,39 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { getDateOfWeek, formatDate, cutFormatDate } from "../weekService/page";
 import "./page.css";
 import React, { FormEvent, useEffect, useState } from "react";
 import { submitDate } from "../billD/route";
 import * as XLSX from "xlsx";
+import {
+  Autocomplete,
+  TextField,
+  Button,
+  Card,
+  CardHeader,
+  CardContent,
+  Box,
+} from "@mui/material";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { Dayjs } from "dayjs";
+
+interface User {
+  id: string;
+  username: string;
+}
 
 function Bill() {
-  const [date, setDate] = useState("");
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [date, setDate] = useState<Dayjs>();
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<
-    { id: number; username: string }[]
-  >([]);
+  const [searchResults, setSearchResults] = useState<User[]>([]);
   const [startDate, setStart] = useState("");
   const [endDate, setEnd] = useState("");
   const [result, setResult] = useState<
@@ -59,7 +79,7 @@ function Bill() {
   useEffect(() => {
     if (date) {
       console.log("Current date : ", date);
-      const dateString = new Date(date);
+      const dateString = date.toDate();
       const result = getDateOfWeek(dateString);
       const { start, end } = result.range;
       console.log(start);
@@ -78,13 +98,9 @@ function Bill() {
   const submitform = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(startDate, endDate);
-    if (selectedUserId && startDate && endDate) {
+    if (selectedUser && startDate && endDate) {
       console.log("HERE");
-      const result = await submitDate(
-        selectedUserId.toString(),
-        startDate,
-        endDate
-      );
+      const result = await submitDate(selectedUser.id, startDate, endDate);
       console.log("RESULT ", result);
       setResult(result);
     }
@@ -97,136 +113,108 @@ function Bill() {
     XLSX.utils.book_append_sheet(wb, ws, "BillData");
     XLSX.writeFile(wb, "BillData.xlsx");
   };
-
-  // Create 20 empty rows
-  const emptyRows = Array.from({ length: 20 }, (_, index) => (
-    <div className="table-row" key={`empty-${index}`}>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-      <div className="table-cell"></div>
-    </div>
-  ));
+  console.log(result);
 
   return (
-    <div className="bill-container">
-      <h1 className="Billtext">Bill</h1>
-      <div className="boxofbill">
-        <div className="search-container">
-          
-            <form onSubmit={submitform}>
-              <div className="user">
-                Search Username:
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search for a username"
-                  className="search-input"
-                />
-                {searchResults.length > 0 && (
-                  <ul className="bg-black text-white">
-                    {searchResults.map((user) => (
-                      <li
-                        className="border"
-                        key={user.id}
-                        onClick={() => {
-                          setSelectedUserId(user.id);
-                          setSearchQuery(user.username);
-                        }}
-                      >
-                        {user.username}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-
-              <div className="dateouterbox">
-                
-                <h2 className="inputdate">input date :</h2> 
-                <div className="datebox">
-                  <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
+    <>
+      <Card elevation={6}>
+        <CardHeader>Bill</CardHeader>
+        <CardContent sx={{ display: "flex", justifyContent: "center" }}>
+          <Box component="form" onSubmit={submitform}>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Autocomplete
+                inputValue={searchQuery}
+                sx={{
+                  width: "300px",
+                }}
+                options={searchResults}
+                value={selectedUser}
+                getOptionKey={(e) => e.id}
+                getOptionLabel={(e) => e.username}
+                onInputChange={(_, value) => setSearchQuery(value)}
+                onChange={(_, value) => setSelectedUser(value)}
+                renderInput={(e) => (
+                  <TextField
+                    {...e}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    placeholder="Search for a username"
+                    label={"Search user"}
                   />
-                </div>
-              </div>
+                )}
+              />
+              <DatePicker value={date} onChange={(e) => setDate(e as Dayjs)} />
+            </Box>
+            <Box pt={2} display={"flex"} gap={2} justifyContent={"center"}>
+              <Button type="submit" variant="contained" color="success">
+                Generate Bill
+              </Button>
 
-              <button className="search-button" type="submit">
-                <div className="generate">Generate BILL</div>
-              </button>
-            </form>
+              <Button
+                variant="outlined"
+                color="warning"
+                className="exporttoexcel"
+                onClick={exportToExcel}
+              >
+                Export to Excel
+              </Button>
+            </Box>
+          </Box>
+        </CardContent>
+      </Card>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell>Item</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Expiry</TableCell>
+              <TableCell>Lot Size</TableCell>
+              <TableCell>No of Lot</TableCell>
+              <TableCell>Buy Qty</TableCell>
+              <TableCell>Buy Price</TableCell>
+              <TableCell>Buy Net Price</TableCell>
+              <TableCell>Sell Qty</TableCell>
+              <TableCell>Sell Price</TableCell>
+              <TableCell>Sell Net Price</TableCell>
+              <TableCell>PNL</TableCell>
+              <TableCell>Net Qty</TableCell>
+              <TableCell>CMP</TableCell>
+              <TableCell>MTM</TableCell>
+              <TableCell>PNL</TableCell>
+              <TableCell>NET</TableCell>
+            </TableRow>
+          </TableHead>
 
-          <div className="excel">
-            <Button className="exporttoexcel" onClick={exportToExcel}>
-              Export to Excel
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <div className="exclebox">
-        <div className="table-container">
-          <div className="table-header">Name</div>
-          <div className="table-header">Item</div>
-          <div className="table-header">Date</div>
-          <div className="table-header">Expiry</div>
-          <div className="table-header">Lot Size</div>
-          <div className="table-header">No of Lot</div>
-          <div className="table-header">Buy Qty</div>
-          <div className="table-header">Buy Price</div>
-          <div className="table-header">Buy Net Price</div>
-          <div className="table-header">Sell Qty</div>
-          <div className="table-header">Sell Price</div>
-          <div className="table-header">Sell Net Price</div>
-          <div className="table-header">PNL</div>
-          <div className="table-header">Net Qty</div>
-          <div className="table-header">CMP</div>
-          <div className="table-header">MTM</div>
-          <div className="table-header">PNL</div>
-          <div className="table-header">NET</div>
-
-          {result.map((results) => (
-            <div className="table-row" key={results.id}>
-              <div className="table-cell">{results.username}</div>
-              <div className="table-cell">{results.item}</div>
-              <div className="table-cell">{cutFormatDate(results.date)}</div>
-              <div className="table-cell">{cutFormatDate(results.expiry)}</div>
-              <div className="table-cell">{results.lot_size}</div>
-              <div className="table-cell">{results.no_of_lot}</div>
-              <div className="table-cell">{results.buy_qty}</div>
-              <div className="table-cell">{results.buy_price}</div>
-              <div className="table-cell">{results.buy_net_price}</div>
-              <div className="table-cell">{results.sell_qty}</div>
-              <div className="table-cell">{results.sell_price}</div>
-              <div className="table-cell">{results.sell_net_price}</div>
-              <div className="table-cell">{results.pnl}</div>
-              <div className="table-cell">{results.net_qty}</div>
-              <div className="table-cell">{results.cmp}</div>
-              <div className="table-cell">{results.mtm}</div>
-              <div className="table-cell">{results.pnl}</div>
-              <div className="table-cell">{results.net}</div>
-            </div>
-          ))}
-
-          {emptyRows}
-        </div>
-      </div>
-    </div>
+          <TableBody>
+            {result?.map?.((results) => (
+              <TableRow key={results.id}>
+                <TableCell>{results.username}</TableCell>
+                <TableCell>{results.item}</TableCell>
+                <TableCell>{cutFormatDate(results.date)}</TableCell>
+                <TableCell>{cutFormatDate(results.expiry)}</TableCell>
+                <TableCell>{results.lot_size}</TableCell>
+                <TableCell>{results.no_of_lot}</TableCell>
+                <TableCell>{results.buy_qty}</TableCell>
+                <TableCell>{results.buy_price}</TableCell>
+                <TableCell>{results.buy_net_price}</TableCell>
+                <TableCell>{results.sell_qty}</TableCell>
+                <TableCell>{results.sell_price}</TableCell>
+                <TableCell>{results.sell_net_price}</TableCell>
+                <TableCell>{results.pnl}</TableCell>
+                <TableCell>{results.net_qty}</TableCell>
+                <TableCell>{results.cmp}</TableCell>
+                <TableCell>{results.mtm}</TableCell>
+                <TableCell>{results.pnl}</TableCell>
+                <TableCell>{results.net}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
 

@@ -15,6 +15,10 @@
     border: 2px soild black;
 }
 
+.searchbox {
+    margin-top: 20px;
+}
+
 .search-input {
     padding: 5px;
     font-size: 16px;
@@ -28,7 +32,7 @@
 .search-button {
     cursor: pointer;
     margin-top: 20px;
-    border: solid black 2px;
+    border: solid rgb(0, 0, 0) 2px;
     border-radius: 5px;
 }
 
@@ -42,15 +46,8 @@
     border-radius: 5px;
 }
 
-.dateouterbox {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: -34px;
-    margin-right: 25%;
-    font-size: 109%;
-}
-
 .inputdate {
+    margin-top: 5.5px;
     margin-right: 10px;
 }
 
@@ -110,13 +107,15 @@
     display: contents;
 }
 
-.user {
-    border: 2px soild black;
-    margin-right: 30%;
+.dateouterbox {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
 }
 
-.searchtext {
-    margin-right: 300px;
+.user {
+    display: flex;
+    justify-content: space-evenly;
 }
 
 @media (max-width: 768px) {

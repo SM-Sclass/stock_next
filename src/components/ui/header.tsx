@@ -1,22 +1,26 @@
 "use client"
 import React from "react";
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import "./header.css";
 import Navbar from "./navbar";
 function Header() {
   return (
-    <div className="img1">
-      <div className="body w-full">
-        <div className="text">
-          <h1>Trading Bill</h1> 
-        </div>
-        <div className="butten">
-          <div className="w-auto">
-            <Navbar/>
-          </div>
-            
-        </div>
-      </div>
-    </div>
+    <Box sx={{ flexGrow: 1 }}>
+    <AppBar position="static" sx={(theme)=>({background: theme.palette.common.black})}>
+      <Toolbar sx={{ textAlign: 'center' }} >
+        <Typography variant="h4" sx={{width: '100%'}} >
+            Trading Bill
+          </Typography>
+        </Toolbar>
+        <Box display={'flex'} justifyContent={'center'} pb={1}>
+
+        <Navbar/>
+        </Box>
+        </AppBar>
+        </Box>
   );
 }
 

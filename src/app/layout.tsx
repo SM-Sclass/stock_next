@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/ui/header"; 
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import Client from "./client";
+import { Paper } from "@mui/material";
 
-
-
-const inter = Inter({ subsets: ["latin"]});
 
 export const metadata: Metadata = {
   title: "Trading",
@@ -19,9 +17,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-          <Header/>
-          {children}    
+      <body>
+        <AppRouterCacheProvider>
+          <Client>
+            <Paper sx={{width: '100vw', height: '100vh'}}>
+            {children}
+            </Paper>
+          </Client>
+        </AppRouterCacheProvider>  
       </body>
     </html>
   );

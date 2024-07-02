@@ -3,8 +3,8 @@ import { useEffect, useState, useRef } from "react";
 import protobuf from "protobufjs";
 import { Buffer } from "buffer/";
 import "./page.css"; // Import your CSS file
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { Grid, Button, Box, Typography, TextField, Autocomplete } from "@mui/material";
 interface StockData {
   id: string;
   price: number;
@@ -112,13 +112,14 @@ const stockNames = [
   "INDHOTEL.NS",
   "CUMMINSIND.NS",
   "ICICIGI.NS",
+  "BTC-USD",
 ];
 export default function Live() {
   const [currentStocks, setCurrentStocks] = useState<Record<string, StockData>>(
     {}
   );
   const previousStocks = useRef<Record<string, StockData>>({});
-  const [marketOpen, setMarketOpen] = useState(true);
+  const [marketOpen, setMarketOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState<string[]>([]);
   const [highlightedStock, setHighlightedStock] = useState("");
@@ -174,9 +175,8 @@ export default function Live() {
     };
   }, []);
   const handleSearchInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    value:string
   ) => {
-    const value = event.target.value;
     setSearchInput(value);
     if (value) {
       const filteredResults = stockNames.filter((stock) =>
@@ -209,19 +209,35 @@ export default function Live() {
 
   return (
     <>
-      <h1>{marketOpen ? "Market is open ❤️" : "Market is closed 💔"}</h1>
-      <form onSubmit={handleSearchSubmit} className="search-form">
-        <label className="symbol" htmlFor="search-input">Enter stock symbol:</label>
-        <input
-          type="text"
-          id="search-input"
-          value={searchInput}
-          onChange={handleSearchInputChange}
+      <Typography
+        variant="h4"
+        sx={{ color: "white", width: "100%", textAlign: "center" }}
+      >
+        {marketOpen ? "Market is open ❤️" : "Market is closed 💔"}
+      </Typography>
+      <Box component={'form'} onSubmit={handleSearchSubmit} sx={{display: 'flex', gap:2, justifyContent: 'center', width: '100%', py: 2}}>
+        <Autocomplete 
+         value={searchInput}
+         sx={{width: '300px'}}
+         onChange={(e, value)=>handleSearchInputChange(value || '')}
+         options={stockNames}
+          renderInput={(e)=><TextField 
+            {...e}
+            label={'Enter Stock Symbol'}
+            InputLabelProps={{
+              shrink: true
+            }}
+           ></TextField>}
         />
-        <button type="submit">Search</button>
-      </form>
+        
+        <Button type="submit" variant={"contained"}>
+          Search
+        </Button>
+      </Box>
       <div className="futuretetxt">
-      <Button className="futurestock"><Link  href="/live/futurestock">FutureStock list</Link></Button>
+        <Button variant="outlined">
+          <Link href="/live/futurestock">FutureStock list</Link>
+        </Button>
       </div>
       {searchResults.length > 0 && (
         <ul className="search-results">
@@ -246,7 +262,7 @@ export default function Live() {
           ))}
         </ul>
       )}
-      <div className="stock-container">
+      <Grid container spacing={2}>
         {moveStockToTop(highlightedStock).map((stockId) => {
           const currentPrice = currentStocks[stockId]?.price || 0; // Assuming price is a number
           const previousPrice = previousStocks.current[stockId]?.price || 0;
@@ -255,18 +271,41 @@ export default function Live() {
           const isPriceDecreased =
             previousPrice && currentPrice < previousPrice;
           return (
-            <div
+            <Grid
+              item
+              xs={6}
+              sm={4}
+              md={3}
+              lg={2}
+              xl={2}
+              p={1}
               key={stockId}
-              className={`stock-box ${
-                stockId === highlightedStock ? "highlighted" : ""
-              } ${isPriceIncreased ? "price-increase" : ""}`}
+              sx={
+                stockId === highlightedStock
+                  ? {
+                      borderColor: "blue",
+                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                    }
+                  : currentPrice == 0
+                  ? { color: "black" }
+                  : isPriceIncreased
+                  ? { color: "green" }
+                  : { color: "red" }
+              }
             >
-              <h4> {stockId}</h4>
-              <p>{currentPrice.toFixed(2)}</p>
-            </div>
+              <div
+                style={{ minWidth: "100%" }}
+                className={`stock-box ${
+                  stockId === highlightedStock ? "highlighted" : ""
+                } ${isPriceIncreased ? "price-increase" : ""}`}
+              >
+                <h4> {stockId}</h4>
+                <p>{currentPrice.toFixed(2)}</p>
+              </div>
+            </Grid>
           );
         })}
-      </div>
+      </Grid>
     </>
   );
 }
