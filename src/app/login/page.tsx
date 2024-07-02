@@ -1,48 +1,64 @@
 "use client";
-
-import { FormEvent, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Button, Grid, Paper, Typography, TextField, Link } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons/faGoogle";
-import Link from "next/link";
-import styles from "./login.module.css";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
         console.log(email);
         console.log(password);
+        // Add your login logic here
     };
 
     return (
-        <div className={styles.topBox}>
-            <div className={styles.allBox}>
-                <h1 className={styles.signText}>Sign In</h1>
-                <form className={styles.spaceY6} onSubmit={handleSubmit}>
-                    <div className={styles.loginPageBox}>
-                        <Input className={styles.emailBox} id="email" type="email" placeholder="xyz@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                        <Input className={styles.passwordBox} id="password" type="password" placeholder="*******" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                        <Button className={styles.fullWidthButton} type="submit">
-                            Sign in &rarr;
+        <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
+            <Grid item xs={10} sm={8} md={6} lg={4}>
+                <Paper elevation={3} sx={{ padding: 4 }}>
+                    <Typography variant="h4" gutterBottom align="center">
+                        Sign In
+                    </Typography>
+                    <form onSubmit={handleSubmit}>
+                        <TextField
+                            fullWidth
+                            id="email"
+                            label="Email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            variant="outlined"
+                            margin="normal"
+                            required
+                        />
+                        <TextField
+                            fullWidth
+                            id="password"
+                            label="Password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            variant="outlined"
+                            margin="normal"
+                            required
+                        />
+                        <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
+                            Sign in
                         </Button>
-                    </div>
-                    <p className={styles.registerAccount}>
-                        Don't have an account? <Button variant="link"><Link href="/register">Register</Link></Button>
-                    </p>
-                    <hr className={styles.divider} />
-                    <section className={styles.googleSignInSection}>
-                        <Button className={styles.googleButton}>
-                            <FontAwesomeIcon icon={faGoogle} className={styles.googleIcon} />
-                            <span className={styles.googleButtonText}>Sign in with Google</span>
-                        </Button>
-                    </section>
-                </form>
-            </div>
-        </div>
+                    </form>
+                    <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+                        Don't have an account? <Link href="/register">Register</Link>
+                    </Typography>
+                    <hr style={{ margin: '20px 0' }} />
+                    <Button fullWidth variant="outlined" startIcon={<FontAwesomeIcon icon={faGoogle} />} sx={{ mt: 2 }}>
+                        Sign in with Google
+                    </Button>
+                </Paper>
+            </Grid>
+        </Grid>
     );
 }
 

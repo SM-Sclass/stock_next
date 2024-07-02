@@ -1,28 +1,31 @@
 "use client";
 import React from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import Link from "next/link";
-import styles from "./register.module.css";
+import { Input, Button, Link, Typography, Grid, Paper } from '@mui/material';
 
 type Props = {}
 
 const Register = (props: Props) => {
   return (
-    <div className={styles.container}>
-        <h2 className={styles.heading}>Sign Up</h2>
-        <form className={styles.form}>
-            <div className={styles.inputGroup}>
-                <Input id='username' placeholder='Username' type='text' />
-                <Input id='emailid' placeholder='xyz@gmail.com' type='email' />
-                <Input id='password' placeholder='********' type='password' />
-                <Button className={styles.fullWidthButton}>Sign up &rarr;</Button>
-            </div>
-            <p className={styles.loginPrompt}>
-               Already have an account? <Button variant="link"><Link href="/login">Login</Link></Button> 
-            </p>
-        </form>
-    </div>
+    <Grid container justifyContent="center" alignItems="center" style={{ minHeight: '100vh' }}>
+        <Grid item xs={10} sm={8} md={6} lg={4}>
+            <Paper elevation={3} sx={{ padding: 4 }}>
+                <Typography variant="h4" gutterBottom align="center">
+                    Sign Up
+                </Typography>
+                <form>
+                    <Input fullWidth id='username' placeholder='Username' type='text' sx={{ marginBottom: 2 }} />
+                    <Input fullWidth id='emailid' placeholder='Email address' type='email' sx={{ marginBottom: 2 }} />
+                    <Input fullWidth id='password' placeholder='Password' type='password' sx={{ marginBottom: 2 }} />
+                    <Button fullWidth variant="contained" sx={{ marginBottom: 2 }}>
+                        Sign up
+                    </Button>
+                </form>
+                <Typography variant="body2" align="center" sx={{ marginTop: 2 }}>
+                    Already have an account? <Link href="/login">Login</Link>
+                </Typography>
+            </Paper>
+        </Grid>
+    </Grid>
   )
 }
 

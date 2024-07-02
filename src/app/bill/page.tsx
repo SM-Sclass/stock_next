@@ -1,7 +1,6 @@
 "use client";
 
 import { getDateOfWeek, formatDate, cutFormatDate } from "../weekService/page";
-import "./page.css";
 import React, { FormEvent, useEffect, useState } from "react";
 import { submitDate } from "../billD/route";
 import * as XLSX from "xlsx";
