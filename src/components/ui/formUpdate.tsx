@@ -1,6 +1,21 @@
-"use client"
-import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
+"use client";
 
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  TextField,
+  Grid,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 interface FormData {
   id: number;
@@ -17,94 +32,65 @@ interface FormData {
 }
 
 const Form: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<{ id: number; username: string }[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<
+    { id: number; username: string }[]
+  >([]);
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [formData, setFormData] = useState<FormData>({
     id: 0,
-    username: '',
-    date: '',
-    item: '',
-    expiry: '',
-    lotsize: '',
-    numberlot: '',
+    username: "",
+    date: "",
+    item: "",
+    expiry: "",
+    lotsize: "",
+    numberlot: "",
     buyqty: 0,
-    sellqty: '',
-    sellprice: '',
-    buyprice: ''
+    sellqty: "",
+    sellprice: "",
+    buyprice: "",
   });
 
   useEffect(() => {
-    if(searchQuery)
-      {
-
-        const fetchSearchResults = async () => {
-          if (searchQuery.length > 2) {
-            const response = await fetch(`/api/searchusers?q=${searchQuery}`);
-            const data = await response.json();
-            console.log("THIS IS DATA" ,data)
-            setSearchResults(data);
-          } else {
-            setSearchResults([]);
-          }
-        };
-        
-        fetchSearchResults();
+    const fetchSearchResults = async () => {
+      if (searchQuery.length > 2) {
+        const response = await fetch(`/api/searchusers?q=${searchQuery}`);
+        const data = await response.json();
+        setSearchResults(data);
+      } else {
+        setSearchResults([]);
       }
+    };
+
+    fetchSearchResults();
   }, [searchQuery]);
 
   useEffect(() => {
-    if(selectedUserId)
-      {
-
-        const fetchUserData = async () => {
-          try {
-            
-            
-            const response = await fetch(`/api/user?id=${selectedUserId}`);
-            const data = await response.json();
-            console.log("THIS IS RESPONSE" , data)
-            data.date = data.date.split('T')[0];
-            data.expiry = data.expiry.split('T')[0];
-            console.log(data.date)
-            console.log(data.expiry)
-            // setFormData(data)
-            setFormData({...formData,
-                id:data.id.toString(),
-                username:data.username,
-                date: data.date.split('T')[0],
-                item:data.item,
-                expiry:data.expiry.split('T')[0],
-                lotsize:data.lot_size.toString(),
-                numberlot:data.no_of_lot.toString(),
-                buyqty:data.buy_qty,
-                buyprice:data.buy_price,
-                sellqty:data.sell_qty ? data.sell_qty.toString() : '',
-                sellprice:data.sell_price ? data.sell_price.toString() : '',
-            });
-            const dataToSubmit = {
-              ...formData,
-              lotsize: parseFloat(formData.lotsize),
-              numberlot: parseFloat(formData.numberlot),
-              buyprice: parseFloat(formData.buyprice),
-              sellqty: formData.sellqty === "" ? 0 : parseFloat(formData.sellqty),
-              sellprice: formData.sellprice === "" ? 0 : parseFloat(formData.sellprice)
-            };
-          
-          console.log("This is form date" , formData.username)
-          // setFormData({...formData ,date:formattedDate })
-          // setFormData({...formData ,expiry:expiryDate })
-          console.log("This is Formdata" , formData)
-        } 
-          catch (error) {
-            console.error("Error fetching user data:", error);
+    const fetchUserData = async () => {
+      if (selectedUserId) {
+        try {
+          const response = await fetch(`/api/user?id=${selectedUserId}`);
+          const data = await response.json();
+          setFormData({
+            id: data.id,
+            username: data.username,
+            date: data.date.split("T")[0],
+            item: data.item,
+            expiry: data.expiry.split("T")[0],
+            lotsize: data.lot_size.toString(),
+            numberlot: data.no_of_lot.toString(),
+            buyqty: data.buy_qty,
+            buyprice: data.buy_price.toString(),
+            sellqty: data.sell_qty ? data.sell_qty.toString() : "",
+            sellprice: data.sell_price ? data.sell_price.toString() : "",
+          });
+        } catch (error) {
+          console.error("Error fetching user data:", error);
         }
-        
-      };
-      
-        fetchUserData();
       }
-    
+    };
+
+    fetchUserData();
   }, [selectedUserId]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -115,7 +101,16 @@ const Form: React.FC = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const requiredFields: (keyof FormData)[] = ["username", "date", "item", "expiry", "lotsize", "numberlot", "buyqty", "buyprice"];
+    const requiredFields: (keyof FormData)[] = [
+      "username",
+      "date",
+      "item",
+      "expiry",
+      "lotsize",
+      "numberlot",
+      "buyqty",
+      "buyprice",
+    ];
     for (let key of requiredFields) {
       if (formData[key] === "") {
         alert(`Please fill out the ${key} field.`);
@@ -129,85 +124,178 @@ const Form: React.FC = () => {
       numberlot: parseFloat(formData.numberlot),
       buyprice: parseFloat(formData.buyprice),
       sellqty: formData.sellqty === "" ? 0 : parseFloat(formData.sellqty),
-      sellprice: formData.sellprice === "" ? 0 : parseFloat(formData.sellprice)
+      sellprice: formData.sellprice === "" ? 0 : parseFloat(formData.sellprice),
     };
 
-    const response = await fetch('/api/update', {
-      method: 'POST',
+    const response = await fetch("/api/update", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(dataToSubmit),
     });
 
-    console.log(response);
+    if (response.ok) {
+      alert("Form updated successfully");
+    } else {
+      alert("Failed to update the form");
+    }
   };
 
   return (
-    <div className="box">
-      <div className="text1">
-        <h1>Trading details</h1>
-      </div>
-      <div className="inputbox">
-        <form onSubmit={handleSubmit}>
-          <div className="row">
-            <label className="user">
-              Search Username:
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for a username"
-              />
-              {searchResults.length > 0 && (
-                <ul className='bg-black text-white'>
-                  {searchResults.map((user) => (
-                    <li className='border' key={user.id} onClick={() => setSelectedUserId(user.id)}>
-                      {user.username}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </label>
-            <label className="username" htmlFor="username">
-              Username:
-              <input name="username" type="text" value={formData.username} onChange={handleChange} />
-            </label>
-            <label className="date" htmlFor="date">
-              Date:
-              <input name="date" type="date" value={formData.date} onChange={handleChange} />
-            </label>
-            <label className="item" htmlFor="item">
-              Item: <input name="item" type="text" value={formData.item} onChange={handleChange} />
-            </label>
-            <label className="expiry" htmlFor="expiry">
-              Expiry: <input name="expiry" type="date" value={formData.expiry} onChange={handleChange} />
-            </label>
-            <label className="lotsize" htmlFor="lotsize">
-              Lot size: <input name="lotsize" type="number" value={formData.lotsize} onChange={handleChange} />
-            </label>
-            <label className="numberlot" htmlFor="numberlot">
-              Number of lot: <input name="numberlot" type="number" value={formData.numberlot} onChange={handleChange} />
-            </label>
-            <label className="buyqty" htmlFor="buyqty">
-              Buy quantity: <input name="buyqty" type="number" value={formData.buyqty} onChange={handleChange} />
-            </label>
-            <label className="buyprice" htmlFor="buyprice">
-              Buy price: <input name="buyprice" type="number" step="0.01" value={formData.buyprice} onChange={handleChange} />
-            </label>
-            <label className="sell" htmlFor="sellqty">
-              Sell quantity: <input name="sellqty" type="number" value={formData.sellqty} onChange={handleChange} />
-            </label>
-            <label className="sellprice" htmlFor="sellprice">
-              Sell price: <input name="sellprice" type="number" step="0.01" value={formData.sellprice} onChange={handleChange} />
-            </label>
-            <div className="submit1">
-              <button className="submit" type="submit">Submit</button>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Box display="flex" width="100%" justifyContent="center">
+        <Box maxWidth="md" width="100%">
+          <Card elevation={4}>
+            <CardHeader title="Update Trading Details" />
+            <CardContent>
+              <Box component="form" onSubmit={handleSubmit}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Search Username"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search for a username"
+                    />
+                    {searchResults.length > 0 && (
+                      <List>
+                        {searchResults.map((user) => (
+                          <ListItem
+                            button
+                            key={user.id}
+                            onClick={() => setSelectedUserId(user.id)}
+                          >
+                            <ListItemText primary={user.username} />
+                          </ListItem>
+                        ))}
+                      </List>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Username"
+                      name="username"
+                      value={formData.username}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <DatePicker
+                      label="Date"
+                      value={dayjs(formData.date)}
+                      onChange={(date) =>
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          date: (date as Dayjs).format("YYYY-MM-DD"),
+                        }))
+                      }
+                      renderInput={(params) => <TextField {...params} fullWidth />}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Item"
+                      name="item"
+                      value={formData.item}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <DatePicker
+                      label="Expiry"
+                      value={dayjs(formData.expiry)}
+                      onChange={(date) =>
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          expiry: (date as Dayjs).format("YYYY-MM-DD"),
+                        }))
+                      }
+                      renderInput={(params) => <TextField {...params} fullWidth />}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Lot Size"
+                      name="lotsize"
+                      type="number"
+                      value={formData.lotsize}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Number of Lot"
+                      name="numberlot"
+                      type="number"
+                      value={formData.numberlot}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Buy Quantity"
+                      name="buyqty"
+                      type="number"
+                      value={formData.buyqty}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Buy Price"
+                      name="buyprice"
+                      type="number"
+                      value={formData.buyprice}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Sell Quantity"
+                      name="sellqty"
+                      type="number"
+                      value={formData.sellqty}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Sell Price"
+                      name="sellprice"
+                      type="number"
+                      value={formData.sellprice}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                </Grid>
+                <Box pt={2} display="flex" width="100%" justifyContent="center">
+                  <Button
+                    className="submit"
+                    type="submit"
+                    variant="contained"
+                    color="success"
+                  >
+                    Submit
+                  </Button>
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+      </Box>
+    </LocalizationProvider>
   );
 };
 
