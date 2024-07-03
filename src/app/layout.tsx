@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import Client from "./client";
 import { Paper } from "@mui/material";
-
+import { Box } from "@mui/system"; // Import Box component for layout flexibility
 
 export const metadata: Metadata = {
   title: "Trading",
@@ -17,14 +17,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body style={{ margin: 0, padding: 0, overflow: "hidden" }}>
         <AppRouterCacheProvider>
           <Client>
-            <Paper sx={{width: '100vw', height: '100vh'}}>
-            {children}
-            </Paper>
+            <Box sx={{ width: "100vw", height: "100vh", overflow: "auto", backgroundColor: "#f0f2f5" }}>
+              <Paper sx={{ maxWidth: "100%", height: "100%", overflow: "auto" }}>
+                {children}
+              </Paper>
+            </Box>
           </Client>
-        </AppRouterCacheProvider>  
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

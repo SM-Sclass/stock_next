@@ -12,6 +12,12 @@ const NavbarButton = styled(Button)({
   },
 });
 
+const NavbarLink = styled(Link)({
+  textDecoration: 'none',
+  color: 'inherit',
+  padding: '0 5px', // Increase padding for better spacing
+});
+
 const Navbar = () => {
   return (
     <AppBar position="static" sx={{ background: '#333' }}>
@@ -19,38 +25,36 @@ const Navbar = () => {
               display: 'flex',
               justifyContent: 'center',
             }}>
-
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <NavbarButton>
-            <Link href="/Newuser" passHref>
-              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>New User</Typography>
-            </Link>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}> {/* Add gap for spacing between buttons */}
+          <NavbarButton>
+            <NavbarLink href="/Newuser">
+              <Typography variant="h6" component="span">New User</Typography> {/* Use variant="h6" for larger text */}
+            </NavbarLink>
           </NavbarButton>
           <NavbarButton>
-            <Link href="/" passHref>
-              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Bill detal</Typography>
-            </Link>
+            <NavbarLink href="/">
+              <Typography variant="h6" component="span">Bill Detail</Typography>
+            </NavbarLink>
           </NavbarButton>
           <NavbarButton>
-            <Link href="/update" passHref>
-              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Update</Typography>
-            </Link>
+            <NavbarLink href="/update">
+              <Typography variant="h6" component="span">Update</Typography>
+            </NavbarLink>
           </NavbarButton>
           <NavbarButton>
-            <Link href="/bill" passHref>
-              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Bill</Typography>
-            </Link>
-          </NavbarButton>
-          
-          <NavbarButton>
-            <Link href="/live" passHref>
-              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Live</Typography>
-            </Link>
+            <NavbarLink href="/bill">
+              <Typography variant="h6" component="span">Bill</Typography>
+            </NavbarLink>
           </NavbarButton>
           <NavbarButton>
-            <Link href="/login" passHref>
-              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Login</Typography>
-            </Link>
+            <NavbarLink href="/live">
+              <Typography variant="h6" component="span">Live</Typography>
+            </NavbarLink>
+          </NavbarButton>
+          <NavbarButton>
+            <NavbarLink href="/login">
+              <Typography variant="h6" component="span">Login</Typography>
+            </NavbarLink>
           </NavbarButton>
         </Box>
       </Toolbar>
