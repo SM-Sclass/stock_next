@@ -21,9 +21,14 @@ const Navbar = () => {
             }}>
 
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <NavbarButton>
+            <Link href="/Newuser" passHref>
+              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>New User</Typography>
+            </Link>
+          </NavbarButton>
           <NavbarButton>
             <Link href="/" passHref>
-              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Home</Typography>
+              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Bill detal</Typography>
             </Link>
           </NavbarButton>
           <NavbarButton>
@@ -36,11 +41,7 @@ const Navbar = () => {
               <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Bill</Typography>
             </Link>
           </NavbarButton>
-          <NavbarButton>
-            <Link href="/sentbill" passHref>
-              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>SentBill</Typography>
-            </Link>
-          </NavbarButton>
+          
           <NavbarButton>
             <Link href="/live" passHref>
               <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Live</Typography>
