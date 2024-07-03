@@ -1,41 +1,60 @@
-import React, { useState } from 'react';
-import { Button } from './button';
+import React from 'react';
+import { AppBar, Toolbar, Button, Box, Typography } from '@mui/material';
 import Link from 'next/link';
-import "./navbar.css";
+import { styled } from '@mui/system';
 
-type Props = {}
+const NavbarButton = styled(Button)({
+  color: '#ffffff',
+  textTransform: 'none',
+  padding: '0 20px', // Add some padding for spacing
+  '&:hover': {
+    backgroundColor: 'transparent',
+  },
+});
 
-const Navbar = (props: Props) => {
-  const [animationStyle, setAnimationStyle] = useState({ width: '100px', left: '0' });
-
-  const handleClick = (width: string, left: string) => {
-    setAnimationStyle({ width, left });
-  };
-
+const Navbar = () => {
   return (
-    <div className='nav'>
-      <Button variant="ghost" asChild>
-        <Link href="/" className='text-white' onClick={() => handleClick('100px', '0')}>Home</Link>
-      </Button>
-      <Button variant="ghost" asChild>
-        <Link href="/update" className='text-white' onClick={() => handleClick('110px', '100px')}>Update</Link>
-      </Button>
-      <Button variant="ghost" asChild>
-        <Link href="/bill" className='text-white' onClick={() => handleClick('100px', '210px')}>Bill</Link>
-      </Button>
-      <Button className='sentbill' variant="ghost" asChild>
-        <Link href="/sentbill" className='text-white' onClick={() => handleClick('160px', '310px')}>SentBill</Link>
-      </Button>
-      <Button className='live' variant="ghost" asChild>
-        <Link href="/live" className='text-white' onClick={() => handleClick('120px', '470px')}>Live</Link>
-      </Button>
-      <Button className='login1' variant="ghost" asChild>
-        <Link href="/login" className='text-white' onClick={() => handleClick('120px', '590px')}>Login</Link>
-      </Button>
-      
-      <div className="animation" style={animationStyle}></div>
-    </div>
+    <AppBar position="static" sx={{ background: '#333' }}>
+      <Toolbar sx={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}>
+
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <NavbarButton>
+            <Link href="/" passHref>
+              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Home</Typography>
+            </Link>
+          </NavbarButton>
+          <NavbarButton>
+            <Link href="/update" passHref>
+              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Update</Typography>
+            </Link>
+          </NavbarButton>
+          <NavbarButton>
+            <Link href="/bill" passHref>
+              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Bill</Typography>
+            </Link>
+          </NavbarButton>
+          <NavbarButton>
+            <Link href="/sentbill" passHref>
+              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>SentBill</Typography>
+            </Link>
+          </NavbarButton>
+          <NavbarButton>
+            <Link href="/live" passHref>
+              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Live</Typography>
+            </Link>
+          </NavbarButton>
+          <NavbarButton>
+            <Link href="/login" passHref>
+              <Typography variant="body1" component="span" sx={{ color: 'inherit', textDecoration: 'none' }}>Login</Typography>
+            </Link>
+          </NavbarButton>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
-}
+};
 
 export default Navbar;

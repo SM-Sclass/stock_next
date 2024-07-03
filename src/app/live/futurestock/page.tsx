@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
+import { Grid, Typography, TextField, Button, Box } from "@mui/material";
 import protobuf from "protobufjs";
-import { Buffer } from "buffer/";
-import "../page.css"; // Import your CSS file
+
 interface StockData {
   id: string;
   price: number;
 }
+
 const stockNames = [
   "RELIANCE.NS",
   "TCS.NS",
@@ -110,17 +111,16 @@ const stockNames = [
   "INDHOTEL.NS",
   "CUMMINSIND.NS",
   "ICICIGI.NS",
-  
 ];
+
 export default function Live() {
-  const [currentStocks, setCurrentStocks] = useState<Record<string, StockData>>(
-    {}
-  );
+  const [currentStocks, setCurrentStocks] = useState<Record<string, StockData>>({});
   const previousStocks = useRef<Record<string, StockData>>({});
   const [marketOpen, setMarketOpen] = useState(true);
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState<string[]>([]);
   const [highlightedStock, setHighlightedStock] = useState("");
+
   useEffect(() => {
     const ws = new WebSocket("wss://streamer.finance.yahoo.com");
     protobuf.load("./YPricingData.proto", (error, root) => {
@@ -131,50 +131,42 @@ export default function Live() {
       const Yaticker = root.lookupType("yaticker");
       ws.onopen = function open() {
         console.log("connected");
-        ws.send(
-          JSON.stringify({
-            subscribe: stockNames,
-          })
-        );
+        ws.send(JSON.stringify({ subscribe: stockNames }));
       };
       ws.onclose = function close() {
         console.log("disconnected");
       };
       ws.onmessage = function incoming(message) {
         console.log("incoming message");
-        const decodedMessage = Yaticker.decode(
-          new Buffer(message.data, "base64")
-        );
+        const decodedMessage = Yaticker.decode(new Buffer(message.data, "base64"));
         const next = decodedMessage as unknown as StockData;
         setCurrentStocks((prevStocks) => {
           const newStocks = { ...prevStocks, [next.id]: next };
           previousStocks.current[next.id] = prevStocks[next.id];
           return newStocks;
         });
-        // Update previousStocks.current for comparison
         previousStocks.current[next.id] = currentStocks[next.id];
       };
       return () => {
         ws.close();
       };
     });
-    // Check market status
+
     const checkMarketStatus = () => {
       const now = new Date();
       const marketCloseTime = new Date();
       marketCloseTime.setHours(15, 30, 0); // Market closes at 3:30 PM
       setMarketOpen(now <= marketCloseTime);
     };
-    // Check market status initially and then every minute
+
     checkMarketStatus();
     const interval = setInterval(checkMarketStatus, 60000); // Check every minute
     return () => {
       clearInterval(interval);
     };
   }, []);
-  const handleSearchInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+
+  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchInput(value);
     if (value) {
@@ -186,6 +178,7 @@ export default function Live() {
       setSearchResults([]);
     }
   };
+
   const handleSearchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const stockSymbol = searchInput.toUpperCase();
@@ -201,68 +194,60 @@ export default function Live() {
     setSearchInput("");
     setSearchResults([]);
   };
+
   const moveStockToTop = (stockId: string) => {
     const filteredStocks = stockNames.filter((stock) => stock !== stockId);
     return [stockId, ...filteredStocks];
   };
 
   return (
-    <>
-      <h1>{marketOpen ? "Market is open ❤️" : "Market is closed 💔"}</h1>
-      <form onSubmit={handleSearchSubmit} className="search-form">
-        <label htmlFor="search-input">Enter stock symbol:</label>
-        <input
-          type="text"
+    <Box sx={{ backgroundColor: '#000000', minHeight: '100vh', padding: '20px' }}>
+      <Typography variant="h4" sx={{ textAlign: "center", color: "#ffffff" }}>
+        {marketOpen ? "Market is open ❤️" : "Market is closed 💔"}
+      </Typography>
+      <Box component="form" onSubmit={handleSearchSubmit} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2, py: 2 }}>
+        <TextField
           id="search-input"
+          label="Enter stock symbol"
+          variant="outlined"
           value={searchInput}
           onChange={handleSearchInputChange}
+          sx={{ width: '300px', color: "#ffffff" }}
         />
-        <button type="submit">Search</button>
-      </form>
-      {searchResults.length > 0 && (
-        <ul className="search-results">
-          {searchResults.map((result, index) => (
-            <li key={index}>
-              <div
-                className={`stock-box ${
-                  highlightedStock === result ? "highlighted" : ""
-                }`}
-                onClick={() => setHighlightedStock(result)}
-              >
-                <h4>{result}</h4>
-                <p>
-                  {currentStocks[result]?.price
-                    ? `Current Price: ${currentStocks[result]?.price.toFixed(
-                        2
-                      )}`
-                    : "Price unavaila"}{" "}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-      <div className="stock-container">
+        <Button type="submit" variant="contained">
+          Search
+        </Button>
+      </Box>
+      <Grid container spacing={2} justifyContent="center" style={{ marginTop: '20px' }}>
         {moveStockToTop(highlightedStock).map((stockId) => {
-          const currentPrice = currentStocks[stockId]?.price || 0; // Assuming price is a number
+          const currentPrice = currentStocks[stockId]?.price || 0;
           const previousPrice = previousStocks.current[stockId]?.price || 0;
-          const isPriceIncreased =
-            previousPrice && currentPrice > previousPrice;
-          const isPriceDecreased =
-            previousPrice && currentPrice < previousPrice;
+          const isPriceIncreased = previousPrice && currentPrice > previousPrice;
+          const isPriceDecreased = previousPrice && currentPrice < previousPrice;
+
           return (
-            <div
-              key={stockId}
-              className={`stock-box ${
-                stockId === highlightedStock ? "highlighted" : ""
-              } ${isPriceIncreased ? "price-increase" : ""}`}
-            >
-              <h4> {stockId}</h4>
-              <p>{currentPrice.toFixed(2)}</p>
-            </div>
+            <Grid item xs={6} sm={4} md={3} lg={2} key={stockId}>
+              <Box
+                className="MuiBox-root mui-n5kbcb" // Universal selector for all MuiBox-root
+                sx={{
+                  padding: 2,
+                  border: "1px solid #ffffff", // White outline
+                  borderRadius: 5,
+                  textAlign: "center",
+                  backgroundColor: stockId === highlightedStock ? "#ffffff" : "#000000", // Black inside
+                  boxShadow: stockId === highlightedStock ? "0 4px 8px rgba(0, 0, 0, 0.2)" : "none",
+                  color: "#ffffff", // White text color
+                  cursor: "pointer"
+                }}
+                onClick={() => setHighlightedStock(stockId)}
+              >
+                <Typography variant="h6" sx={{ color: "#ffffff" }}>{stockId}</Typography>
+                <Typography sx={{ color: "#ffffff" }}>{currentPrice.toFixed(2)}</Typography>
+              </Box>
+            </Grid>
           );
         })}
-      </div>
-    </>
+      </Grid>
+    </Box>
   );
 }
