@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import "../../app/globals.css";
 import {
   Box,
   Button,
@@ -92,7 +91,7 @@ const Form: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const requiredFields: (keyof FormData)[] = [
       "username",
       "uid",
@@ -114,8 +113,8 @@ const Form: React.FC = () => {
 
     const dataToSubmit = {
       ...formData,
-      date: formData.date.format('YYYY-MM-DD'),
-      expiry: formData.expiry?.format('YYYY-MM-DD') || null,
+      date: formData.date.format("YYYY-MM-DD"),
+      expiry: formData.expiry?.format("YYYY-MM-DD") || null,
       lotsize: parseFloat(formData.lotsize),
       numberlot: parseFloat(formData.numberlot),
       buyprice: parseFloat(formData.buyprice),
@@ -138,13 +137,30 @@ const Form: React.FC = () => {
     }
   };
 
+  // Function to get the last Thursday of the month
+  const getLastThursdayOfMonth = (date: Dayjs): Dayjs => {
+    const endOfMonth = date.endOf("month");
+    let lastThursday = endOfMonth.subtract(1, "week").day(4); // Set to Thursday of the last week of the month
+    if (lastThursday.isAfter(endOfMonth)) {
+      lastThursday = endOfMonth.subtract(1, "week").day(4); // Adjust to the previous Thursday if needed
+    }
+    return lastThursday;
+  };
+
+  useEffect(() => {
+    if (formData.date) {
+      const expiryDate = getLastThursdayOfMonth(formData.date);
+      setFormData((prevData) => ({ ...prevData, expiry: expiryDate }));
+    }
+  }, [formData.date]);
+
   return (
     <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
       <Box maxWidth={"md"}>
         <Card elevation={4}>
           <CardHeader title="Trading details" />
           <CardContent>
-            <Box component={"form"} onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                     <TextField
@@ -204,7 +220,7 @@ const Form: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
                     <DatePicker
-                      label="Expiry"
+                      label="Expiry (Last Thursday of the Month)"
                       value={formData.expiry}
                       onChange={(date) =>
                         setFormData((prevData) => ({ ...prevData, expiry: date as Dayjs }))
@@ -276,11 +292,11 @@ const Form: React.FC = () => {
                 </Grid>
               </Grid>
               <Box sx={{ pt: 2, display: "flex", width: "100%", justifyContent: "center" }}>
-                <Button className="submit" type="submit" variant="contained" color="success">
+                <Button type="submit" variant="contained" color="success">
                   Submit
                 </Button>
               </Box>
-            </Box>
+            </form>
           </CardContent>
         </Card>
       </Box>

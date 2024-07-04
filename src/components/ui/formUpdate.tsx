@@ -31,6 +31,7 @@ interface FormData {
   sellqty: string;
   sellprice: string;
   buyprice: string;
+  week: string; // New field for week
 }
 
 const Form: React.FC = () => {
@@ -51,6 +52,7 @@ const Form: React.FC = () => {
     sellqty: "",
     sellprice: "",
     buyprice: "",
+    week: "", // Initialize week field
   });
 
   useEffect(() => {
@@ -74,15 +76,16 @@ const Form: React.FC = () => {
           setFormData({
             id: data.id,
             username: data.username,
-            date: data.date.split("T")[0],
+            date: dayjs(data.date.split("T")[0]).format("DD/MM/YYYY"),
             item: data.item,
-            expiry: data.expiry.split("T")[0],
+            expiry: dayjs(data.expiry.split("T")[0]).format("DD/MM/YYYY"),
             lotsize: data.lot_size.toString(),
             numberlot: data.no_of_lot.toString(),
             buyqty: data.buy_qty,
             buyprice: data.buy_price.toString(),
             sellqty: data.sell_qty ? data.sell_qty.toString() : "",
             sellprice: data.sell_price ? data.sell_price.toString() : "",
+            week: getFridays(), // Assuming you want to initialize with available weeks
           });
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -93,9 +96,15 @@ const Form: React.FC = () => {
     fetchUserData();
   }, [selectedUserId]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { name: any; value: any; }>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    if (name === "date" || name === "expiry") {
+      // Ensure date format is dd/mm/yyyy when updating form data
+      const formattedDate = dayjs(value, "YYYY-MM-DD").format("DD/MM/YYYY");
+      setFormData((prevData) => ({ ...prevData, [name]: formattedDate }));
+    } else {
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -110,6 +119,7 @@ const Form: React.FC = () => {
       "numberlot",
       "buyqty",
       "buyprice",
+      "week", // Ensure week is a required field
     ];
     for (let key of requiredFields) {
       if (formData[key] === "") {
@@ -140,6 +150,20 @@ const Form: React.FC = () => {
     } else {
       alert("Failed to update the form");
     }
+  };
+
+  // Function to get the past and ongoing Fridays
+  const getFridays = () => {
+    const today = new Date();
+    const todayDay = today.getDay();
+    const fridayOffset = todayDay >= 5 ? 12 - todayDay : 5 - todayDay;
+
+    const fridays = [];
+    for (let i = 0; i <= fridayOffset; i += 7) {
+      const fridayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+      fridays.push(dayjs(fridayDate).format("DD/MM/YYYY"));
+    }
+    return fridays.join(", "); // Join Fridays for display if needed
   };
 
   return (
@@ -183,10 +207,30 @@ const Form: React.FC = () => {
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Select Week"
+                      name="week"
+                      select
+                      value={formData.week}
+                      onChange={handleChange}
+                      SelectProps={{
+                        native: true,
+                      }}
+                    >
+                      <option value=""></option>
+                      {formData.week.split(", ").map((week, index) => (
+                        <option key={index} value={week}>
+                          {week}
+                        </option>
+                      ))}
+                    </TextField>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
                     <FormControl fullWidth>
                       <DatePicker
                         label="Date"
-                        value={dayjs(formData.date)}
+                        value={dayjs(formData.date, "DD/MM/YYYY")}
                         onChange={(date) =>
                           setFormData((prevData) => ({
                             ...prevData,
@@ -210,7 +254,7 @@ const Form: React.FC = () => {
                     <FormControl fullWidth>
                       <DatePicker
                         label="Expiry"
-                        value={dayjs(formData.expiry)}
+                        value={dayjs(formData.expiry, "DD/MM/YYYY")}
                         onChange={(date) =>
                           setFormData((prevData) => ({
                             ...prevData,
