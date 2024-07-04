@@ -188,7 +188,6 @@ const Form: React.FC = () => {
                       <List>
                         {searchResults.map((user) => (
                           <ListItem
-                            button
                             key={user.id}
                             onClick={() => setSelectedUserId(user.id)}
                           >
