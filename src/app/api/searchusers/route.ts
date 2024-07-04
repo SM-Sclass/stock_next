@@ -4,10 +4,10 @@ import connectDB from '@/lib/db';
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
-    const q = url.searchParams.get('q') || '';
+    const q = url.searchParams.get('id') || '';
     console.log("THIS IS Q",q)
     const connection = await connectDB();
-    const [rows] = await connection.query('SELECT id, username FROM main WHERE username LIKE ?', [`%${q}%`]);
+    const [rows] = await connection.query('SELECT id, username FROM users WHERE username LIKE ?', [`%${q}%`]);
     console.log("done")
     console.log(rows)
     const result = rows as any[]

@@ -9,16 +9,20 @@ import {
   Typography,
   Grid,
 } from "@mui/material";
+import { registerUser} from "@/helpers/search";
+
 
 function SentBill() {
-  const [personName, setPersonName] = useState("");
-  const [charges, setCharges] = useState("");
-  const [depositAmount, setDepositAmount] = useState("");
+  const [userName , setuserName] = useState("")
+  const [email , setEmail] = useState("")
+  const [phonenumber , setphoneNumber] = useState("")
 
   const sendBill = () => {
-    console.log(`Sending bill to ${personName}...`);
-    console.log(`Charges: ${charges}`);
-    console.log(`Deposit Amount: ${depositAmount}`);
+    const register = registerUser(userName , email , phonenumber)
+    console.log(`Sending bill to ${userName}...`);
+    console.log(`Charges: ${email}`);
+    console.log(`Deposit Amount: ${phonenumber}`);
+
   };
 
   return (
@@ -30,27 +34,27 @@ function SentBill() {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
-              value={personName}
-              onChange={(e) => setPersonName(e.target.value)}
-              label="Person's Name"
+              value={userName}
+              onChange={(e) => setuserName(e.target.value)}
+              label="User Name"
               fullWidth
               variant="outlined"
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
-              value={charges}
-              onChange={(e) => setCharges(e.target.value)}
-              label="Brokerage Charges"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              label="Email"
               fullWidth
               variant="outlined"
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
-              value={depositAmount}
-              onChange={(e) => setDepositAmount(e.target.value)}
-              label="Deposit Amount"
+              value={phonenumber}
+              onChange={(e) => setphoneNumber(e.target.value)}
+              label="Phone number"
               fullWidth
               variant="outlined"
             />
