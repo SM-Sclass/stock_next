@@ -58,7 +58,7 @@ const Form: React.FC = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const requiredFields: (keyof FormData)[] = [
       "username",
       "date",
@@ -79,8 +79,8 @@ const Form: React.FC = () => {
 
     const dataToSubmit = {
       ...formData,
-      date: formData.date.format('YYYY-MM-DD'),
-      expiry: formData.expiry?.format('YYYY-MM-DD') || null,
+      date: formData.date.format("YYYY-MM-DD"),
+      expiry: formData.expiry?.format("YYYY-MM-DD") || null,
       lotsize: parseFloat(formData.lotsize),
       numberlot: parseFloat(formData.numberlot),
       buyprice: parseFloat(formData.buyprice),
@@ -102,6 +102,23 @@ const Form: React.FC = () => {
       alert("Failed to submit the form");
     }
   };
+
+  // Function to get the last Thursday of the month
+  const getLastThursdayOfMonth = (date: Dayjs): Dayjs => {
+    const endOfMonth = date.endOf("month");
+    let lastThursday = endOfMonth.subtract(1, "week").day(4); // Set to Thursday of the last week of the month
+    if (lastThursday.isAfter(endOfMonth)) {
+      lastThursday = endOfMonth.subtract(1, "week").day(4); // Adjust to the previous Thursday if needed
+    }
+    return lastThursday;
+  };
+
+  useEffect(() => {
+    if (formData.date) {
+      const expiryDate = getLastThursdayOfMonth(formData.date);
+      setFormData((prevData) => ({ ...prevData, expiry: expiryDate }));
+    }
+  }, [formData.date]);
 
   return (
     <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
@@ -145,7 +162,7 @@ const Form: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
                     <DatePicker
-                      label="Expiry"
+                      label="Expiry (Last Thursday of the Month)"
                       value={formData.expiry}
                       onChange={(date) =>
                         setFormData((prevData) => ({ ...prevData, expiry: date as Dayjs }))

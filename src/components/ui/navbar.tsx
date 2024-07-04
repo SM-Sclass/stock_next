@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { styled } from '@mui/system';
 import Link from 'next/link';
+import { RiStockLine } from "react-icons/ri";
 
 const pages = [
   { name: 'Bill Detail', path: '/' },
@@ -66,7 +67,7 @@ function ResponsiveAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <RiStockLine style={{ display: 'none', marginRight: 8 }} className="desktop-icon" />
           <Typography
             variant="h6"
             noWrap
@@ -123,7 +124,8 @@ function ResponsiveAppBar() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+         
+          <RiStockLine style={{ display: 'flex', marginRight: 8, fontSize: 25  }} />
           <Typography
             variant="h5"
             noWrap
