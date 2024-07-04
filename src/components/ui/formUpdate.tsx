@@ -17,6 +17,7 @@ import {
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
+import { searchUser,getUser } from "@/helpers/search";
 
 interface FormData {
   id: number;
@@ -57,8 +58,7 @@ const Form: React.FC = () => {
   useEffect(() => {
     const fetchSearchResults = async () => {
       if (searchQuery.length > 2) {
-        const response = await fetch(`/api/searchusers?q=${searchQuery}`);
-        const data = await response.json();
+        const data = await searchUser(searchQuery)
         setSearchResults(data);
       } else {
         setSearchResults([]);
@@ -72,8 +72,7 @@ const Form: React.FC = () => {
     const fetchUserData = async () => {
       if (selectedUserId) {
         try {
-          const response = await fetch(`/api/user?id=${selectedUserId}`);
-          const data = await response.json();
+          const data = await getUser(selectedUserId)
           setFormData({
             id: data.id,
             username: data.username,

@@ -10,12 +10,17 @@ import {
   TextField,
   Grid,
   FormControl,
+  ListItem,
+  ListItemText,
+  List,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
+import { searchUser } from "@/helpers/search";
 
 interface FormData {
   username: string;
+  uid:number,
   date: Dayjs;
   item: string;
   expiry: Dayjs | null;
@@ -28,8 +33,16 @@ interface FormData {
 }
 
 const Form: React.FC = () => {
+  const [searchResults, setSearchResults] = useState<
+    { id: number; username: string }[]
+  >([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [userN, setuserN] = useState<string>("");
+
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [formData, setFormData] = useState<FormData>({
     username: "",
+    uid: 0,
     date: dayjs(),
     item: "",
     expiry: null,
@@ -50,6 +63,27 @@ const Form: React.FC = () => {
     }));
   }, [formData.lotsize, formData.numberlot]);
 
+  useEffect(() => {
+    const fetchSearchResults = async () => {
+      if (searchQuery.length > 2) {
+        const data = await searchUser(searchQuery)
+        setSearchResults(data);
+      } else {
+        setSearchResults([]);
+      }
+    };
+
+    fetchSearchResults();
+  }, [searchQuery]);
+
+  useEffect(() => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      uid: selectedUserId !== null ? selectedUserId : 0,
+      username: userN
+    }));
+  }, [selectedUserId]);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -60,6 +94,7 @@ const Form: React.FC = () => {
 
     const requiredFields: (keyof FormData)[] = [
       "username",
+      "uid",
       "date",
       "item",
       "expiry",
@@ -127,7 +162,31 @@ const Form: React.FC = () => {
           <CardContent>
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6}>
+                    <TextField
+                      fullWidth
+                      label="Search Username"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="username"
+                    />
+                    {searchResults.length > 0 && (
+                      <List>
+                        {searchResults.map((user) => (
+                          <ListItem
+                            button
+                            key={user.id}
+                            onClick={() => {setSelectedUserId(user.id)
+                              setuserN(user.username)
+                            }}
+                          >
+                            <ListItemText primary={user.username} />
+                          </ListItem>
+                        ))}
+                      </List>
+                    )}
+                  </Grid>
+                {/* <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
                     label="Username"
@@ -136,7 +195,7 @@ const Form: React.FC = () => {
                     value={formData.username}
                     onChange={handleChange}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
                     <DatePicker

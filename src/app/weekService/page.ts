@@ -1,3 +1,8 @@
+import dayjs from 'dayjs';
+import weekOfYear from 'dayjs/plugin/weekOfYear'
+dayjs.extend(weekOfYear)
+dayjs
+
 function getWeek(date: Date): number {
     const onejan: Date = new Date(date.getFullYear(), 0, 1);
     return Math.ceil((((date.getTime() - onejan.getTime()) / 86400000) + onejan.getDay() + 1) / 7);
