@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import "../../app/globals.css";
 import {
   Box,
   Button,
@@ -126,7 +125,7 @@ const Form: React.FC = () => {
         <Card elevation={4}>
           <CardHeader title="Trading details" />
           <CardContent>
-            <Box component={"form"} onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -234,11 +233,11 @@ const Form: React.FC = () => {
                 </Grid>
               </Grid>
               <Box sx={{ pt: 2, display: "flex", width: "100%", justifyContent: "center" }}>
-                <Button className="submit" type="submit" variant="contained" color="success">
+                <Button type="submit" variant="contained" color="success">
                   Submit
                 </Button>
               </Box>
-            </Box>
+            </form>
           </CardContent>
         </Card>
       </Box>
