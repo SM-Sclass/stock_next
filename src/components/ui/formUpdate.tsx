@@ -17,7 +17,7 @@ import {
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
-import { searchUser,getUser } from "@/helpers/search";
+import { searchUser, getUser } from "@/helpers/search";
 
 interface FormData {
   id: number;
@@ -58,7 +58,7 @@ const Form: React.FC = () => {
   useEffect(() => {
     const fetchSearchResults = async () => {
       if (searchQuery.length > 2) {
-        const data = await searchUser(searchQuery)
+        const data = await searchUser(searchQuery);
         setSearchResults(data);
       } else {
         setSearchResults([]);
@@ -72,7 +72,7 @@ const Form: React.FC = () => {
     const fetchUserData = async () => {
       if (selectedUserId) {
         try {
-          const data = await getUser(selectedUserId)
+          const data = await getUser(selectedUserId);
           setFormData({
             id: data.id,
             username: data.username,
@@ -96,7 +96,9 @@ const Form: React.FC = () => {
     fetchUserData();
   }, [selectedUserId]);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { name: any; value: any; }>) => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { name: any; value: any }>
+  ) => {
     const { name, value } = e.target;
     if (name === "date" || name === "expiry") {
       // Ensure date format is dd/mm/yyyy when updating form data
@@ -160,7 +162,11 @@ const Form: React.FC = () => {
 
     const fridays = [];
     for (let i = 0; i <= fridayOffset; i += 7) {
-      const fridayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+      const fridayDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate() + i
+      );
       fridays.push(dayjs(fridayDate).format("DD/MM/YYYY"));
     }
     return fridays.join(", "); // Join Fridays for display if needed
@@ -173,7 +179,14 @@ const Form: React.FC = () => {
           <Card elevation={4}>
             <CardHeader title="Update Trading Details" />
             <CardContent>
-              <Box component="form" onSubmit={handleSubmit}>
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                sx={{
+                  maxHeight: "60vh", // Adjust as needed
+                  overflowY: "auto",
+                }}
+              >
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <TextField
@@ -236,7 +249,7 @@ const Form: React.FC = () => {
                             date: (date as Dayjs).format("YYYY-MM-DD"),
                           }))
                         }
-                        renderInput={(params) => <TextField {...params} />}
+                       
                       />
                     </FormControl>
                   </Grid>
@@ -260,7 +273,7 @@ const Form: React.FC = () => {
                             expiry: (date as Dayjs).format("YYYY-MM-DD"),
                           }))
                         }
-                        renderInput={(params) => <TextField {...params} />}
+                        
                       />
                     </FormControl>
                   </Grid>

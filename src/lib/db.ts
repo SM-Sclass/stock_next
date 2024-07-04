@@ -2,7 +2,7 @@ import mysql, { ConnectionOptions } from 'mysql2/promise';
 const access: ConnectionOptions = {
   host: 'localhost',
   user: 'root',
-  password: '$UM!T376mysql',
+  password: 'Arun_3622',
   database: 'next_stock',
   port: 3306,
   waitForConnections: true,

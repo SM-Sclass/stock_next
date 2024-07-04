@@ -21,7 +21,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Dayjs } from "dayjs";
+import dayjs,{ Dayjs } from "dayjs";
+
 
 interface User {
   id: string;
@@ -57,7 +58,16 @@ function Bill() {
       net: string;
     }[]
   >([]);
-
+  const getNextFriday = (date: Dayjs): Dayjs => {
+    let nextFriday = date.day(5); // 5 represents Friday
+    if (nextFriday.isBefore(date)) {
+      nextFriday = nextFriday.add(1, "week");
+    }
+    return nextFriday;
+  };
+  useEffect(()=>{
+    setDate(getNextFriday(dayjs()))
+  },[])
   useEffect(() => {
     if (searchQuery) {
       const fetchSearchResults = async () => {
@@ -143,7 +153,11 @@ function Bill() {
                   />
                 )}
               />
-              <DatePicker value={date} onChange={(e) => setDate(e as Dayjs)} />
+              <DatePicker   label="Expiry (Next Friday)" value={date} onChange={(e) => setDate(e as Dayjs)} />
+              
+                    
+                 
+                
             </Box>
             <Box pt={2} display={"flex"} gap={2} justifyContent={"center"}>
               <Button type="submit" variant="contained" color="success">

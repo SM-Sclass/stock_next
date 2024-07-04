@@ -13,6 +13,8 @@ import {
   ListItem,
   ListItemText,
   List,
+  MenuItem,
+  Autocomplete,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
@@ -20,16 +22,17 @@ import { searchUser } from "@/helpers/search";
 
 interface FormData {
   username: string;
-  uid:number,
-  date: Dayjs;
+  uid: number;
+  date: string;
   item: string;
-  expiry: Dayjs | null;
+  expiry: string | null;
   lotsize: string;
   numberlot: string;
   buyqty: number;
   sellqty: string;
   sellprice: string;
   buyprice: string;
+  week: string;
 }
 
 const Form: React.FC = () => {
@@ -43,7 +46,7 @@ const Form: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     username: "",
     uid: 0,
-    date: dayjs(),
+    date: dayjs().format("DD/MM/YYYY"),
     item: "",
     expiry: null,
     lotsize: "",
@@ -52,6 +55,7 @@ const Form: React.FC = () => {
     sellqty: "",
     sellprice: "",
     buyprice: "",
+    week: "",
   });
 
   useEffect(() => {
@@ -66,7 +70,7 @@ const Form: React.FC = () => {
   useEffect(() => {
     const fetchSearchResults = async () => {
       if (searchQuery.length > 2) {
-        const data = await searchUser(searchQuery)
+        const data = await searchUser(searchQuery);
         setSearchResults(data);
       } else {
         setSearchResults([]);
@@ -80,7 +84,7 @@ const Form: React.FC = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       uid: selectedUserId !== null ? selectedUserId : 0,
-      username: userN
+      username: userN,
     }));
   }, [selectedUserId]);
 
@@ -113,8 +117,10 @@ const Form: React.FC = () => {
 
     const dataToSubmit = {
       ...formData,
-      date: formData.date.format("YYYY-MM-DD"),
-      expiry: formData.expiry?.format("YYYY-MM-DD") || null,
+      date: dayjs(formData.date, "DD/MM/YYYY").format("YYYY-MM-DD"),
+      expiry: formData.expiry
+        ? dayjs(formData.expiry, "DD/MM/YYYY").format("YYYY-MM-DD")
+        : null,
       lotsize: parseFloat(formData.lotsize),
       numberlot: parseFloat(formData.numberlot),
       buyprice: parseFloat(formData.buyprice),
@@ -137,73 +143,86 @@ const Form: React.FC = () => {
     }
   };
 
-  // Function to get the last Thursday of the month
-  const getLastThursdayOfMonth = (date: Dayjs): Dayjs => {
-    const endOfMonth = date.endOf("month");
-    let lastThursday = endOfMonth.subtract(1, "week").day(4); // Set to Thursday of the last week of the month
-    if (lastThursday.isAfter(endOfMonth)) {
-      lastThursday = endOfMonth.subtract(1, "week").day(4); // Adjust to the previous Thursday if needed
+  // Function to get the next Friday
+  const getNextFriday = (date: Dayjs): Dayjs => {
+    let nextFriday = date.day(5); // 5 represents Friday
+    if (nextFriday.isBefore(date)) {
+      nextFriday = nextFriday.add(1, "week");
     }
-    return lastThursday;
+    return nextFriday;
   };
 
   useEffect(() => {
     if (formData.date) {
-      const expiryDate = getLastThursdayOfMonth(formData.date);
-      setFormData((prevData) => ({ ...prevData, expiry: expiryDate }));
+      const expiryDate = getNextFriday(dayjs(formData.date, "DD/MM/YYYY"));
+      setFormData((prevData) => ({
+        ...prevData,
+        expiry: expiryDate.format("DD/MM/YYYY"),
+      }));
     }
   }, [formData.date]);
 
   return (
     <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
       <Box maxWidth={"md"}>
-        <Card elevation={4}>
+        <Card elevation={4} sx={{ maxHeight: "75vh", overflow: "auto" }}>
           <CardHeader title="Trading details" />
           <CardContent>
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Search Username"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="username"
-                    />
-                    {searchResults.length > 0 && (
-                      <List>
-                        {searchResults.map((user) => (
-                          <ListItem
-                            button
-                            key={user.id}
-                            onClick={() => {setSelectedUserId(user.id)
-                              setuserN(user.username)
-                            }}
-                          >
-                            <ListItemText primary={user.username} />
-                          </ListItem>
-                        ))}
-                      </List>
-                    )}
-                  </Grid>
-                {/* <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Username"
-                    name="username"
-                    type="text"
-                    value={formData.username}
-                    onChange={handleChange}
+                    label="Search Username"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="username"
                   />
-                </Grid> */}
+                  {searchResults.length > 0 && (
+                    <List>
+                      {searchResults.map((user) => (
+                        <ListItem
+                          button
+                          key={user.id}
+                          onClick={() => {
+                            setSelectedUserId(user.id);
+                            setuserN(user.username);
+                          }}
+                        >
+                          <ListItemText primary={user.username} />
+                        </ListItem>
+                      ))}
+                    </List>
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Autocomplete 
+                  value={formData.week || ""}
+                  onChange={(a,value)=>{
+                    setFormData((prevData) => ({
+                      ...prevData,
+                    week:value as string
+                    }))
+
+
+                  }}
+                  options={["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"]} renderInput={e=><TextField label="Select Week" {...e}/>}/>
+                  
+                 
+            
+                </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
                     <DatePicker
                       label="Date"
-                      value={formData.date}
+                      value={dayjs(formData.date, "DD/MM/YYYY")}
                       onChange={(date) =>
-                        setFormData((prevData) => ({ ...prevData, date: date as Dayjs }))
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          date: date?.format("DD/MM/YYYY") || "",
+                        }))
                       }
+                      
                     />
                   </FormControl>
                 </Grid>
@@ -212,7 +231,6 @@ const Form: React.FC = () => {
                     fullWidth
                     label="Item"
                     name="item"
-                    type="text"
                     value={formData.item}
                     onChange={handleChange}
                   />
@@ -220,11 +238,19 @@ const Form: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
                     <DatePicker
-                      label="Expiry (Last Thursday of the Month)"
-                      value={formData.expiry}
-                      onChange={(date) =>
-                        setFormData((prevData) => ({ ...prevData, expiry: date as Dayjs }))
+                      label="Expiry (Next Friday)"
+                      value={
+                        formData.expiry
+                          ? dayjs(formData.expiry, "DD/MM/YYYY")
+                          : null
                       }
+                      onChange={(date) =>
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          expiry: date?.format("DD/MM/YYYY") || "",
+                        }))
+                      }
+                      
                     />
                   </FormControl>
                 </Grid>
@@ -245,7 +271,7 @@ const Form: React.FC = () => {
                     name="numberlot"
                     type="number"
                     value={formData.numberlot}
-                    onChange={handleChange}
+                    onChange={handleChange}//edit the text
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -255,9 +281,8 @@ const Form: React.FC = () => {
                     name="buyqty"
                     type="number"
                     value={formData.buyqty}
-                    InputProps={{
-                      readOnly: true,
-                    }}
+                    onChange={handleChange}
+                    
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -291,7 +316,9 @@ const Form: React.FC = () => {
                   />
                 </Grid>
               </Grid>
-              <Box sx={{ pt: 2, display: "flex", width: "100%", justifyContent: "center" }}>
+              <Box
+                sx={{ pt: 2, display: "flex", width: "100%", justifyContent: "center" }}
+              >
                 <Button type="submit" variant="contained" color="success">
                   Submit
                 </Button>
