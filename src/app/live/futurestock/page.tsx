@@ -160,7 +160,7 @@ export default function Live() {
     };
 
     checkMarketStatus();
-    const interval = setInterval(checkMarketStatus, 60000); // Check every minute
+    const interval = setInterval(checkMarketStatus, 6000); // Check every minute
     return () => {
       clearInterval(interval);
     };
