@@ -182,7 +182,6 @@ function Bill() {
               <TableCell>Net Qty</TableCell>
               <TableCell>CMP</TableCell>
               <TableCell>MTM</TableCell>
-              <TableCell>PNL</TableCell>
               <TableCell>NET</TableCell>
             </TableRow>
           </TableHead>
@@ -206,7 +205,6 @@ function Bill() {
                 <TableCell>{results.net_qty}</TableCell>
                 <TableCell>{results.cmp}</TableCell>
                 <TableCell>{results.mtm}</TableCell>
-                <TableCell>{results.pnl}</TableCell>
                 <TableCell>{results.net}</TableCell>
               </TableRow>
             ))}

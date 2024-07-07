@@ -17,7 +17,7 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { searchUser } from "@/helpers/search";
-
+import UsernameSearch from "./search";
 interface FormData {
   username: string;
   uid:number,
@@ -155,20 +155,24 @@ const Form: React.FC = () => {
   }, [formData.date]);
 
   return (
+  
     <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
       <Box maxWidth={"md"}>
         <Card elevation={4}>
           <CardHeader title="Trading details" />
           <CardContent>
+            {/* <UsernameSearch/> */}
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
+                      required
                       label="Search Username"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="username"
+                      helperText="Username required"
                     />
                     {searchResults.length > 0 && (
                       <List>
@@ -231,6 +235,7 @@ const Form: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
+                    required
                     label="Lot size"
                     name="lotsize"
                     type="number"

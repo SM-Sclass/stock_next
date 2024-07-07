@@ -21,6 +21,7 @@ const pages = [
   { name: 'Update', path: '/update' },
   { name: 'Bill', path: '/bill' },
   { name: 'Live', path: '/live' },
+  { name: 'Test', path: '/test'},
 ];
 const settings = [
   { name: 'New User', path: '/Newuser' },
