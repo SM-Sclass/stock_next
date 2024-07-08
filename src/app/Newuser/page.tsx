@@ -14,14 +14,16 @@ import { registerUser} from "@/helpers/search";
 
 function SentBill() {
   const [userName , setuserName] = useState("")
-  const [email , setEmail] = useState("")
-  const [phonenumber , setphoneNumber] = useState("")
+  const [charges , setEmail] = useState("")
+  const [DepositAmount , setphoneNumber] = useState("")
 
   const sendBill = () => {
-    const register = registerUser(userName , email , phonenumber)
+    const register = registerUser(userName , charges , DepositAmount)
     console.log(`Sending bill to ${userName}...`);
-    console.log(`Charges: ${email}`);
-    console.log(`Deposit Amount: ${phonenumber}`);
+    console.log(`Charges: ${charges}`);
+    console.log(`Deposit Amount: ${DepositAmount}`);
+
+   
 
   };
 
@@ -43,18 +45,18 @@ function SentBill() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              value={email}
+              value={charges}
               onChange={(e) => setEmail(e.target.value)}
-              label="Email"
+              label="charges"
               fullWidth
               variant="outlined"
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
-              value={phonenumber}
+              value={DepositAmount}
               onChange={(e) => setphoneNumber(e.target.value)}
-              label="Phone number"
+              label="Deposit Amount"
               fullWidth
               variant="outlined"
             />

@@ -190,16 +190,6 @@ const Form: React.FC = () => {
                       </List>
                     )}
                   </Grid>
-                {/* <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Username"
-                    name="username"
-                    type="text"
-                    value={formData.username}
-                    onChange={handleChange}
-                  />
-                </Grid> */}
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
                     <DatePicker

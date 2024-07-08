@@ -315,7 +315,7 @@ function Row(props: { row: ReturnType<typeof createData> }) {
 
 export default function CollapsibleTable({ row }: { row: any[] }) {
     console.log("THIS",row)
-    const processedRows = row.map((rowData) => {
+    const processedRows = Object.values(row).map((rowData) => {
       return createData(
         rowData.id,
         rowData.UID,
@@ -351,7 +351,7 @@ export default function CollapsibleTable({ row }: { row: any[] }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {processedRows ? processedRows.map((rows) => (
+            {processedRows ? Object.values(processedRows).map((rows) => (
               <Row key={rows.id} row={rows} />
             )):"Not Found"}
           </TableBody>
