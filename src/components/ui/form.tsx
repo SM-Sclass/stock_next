@@ -17,10 +17,10 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 import { searchUser } from "@/helpers/search";
-import UsernameSearch from "./search";
+
 interface FormData {
   username: string;
-  uid:number,
+  uid: number;
   date: Dayjs;
   item: string;
   expiry: Dayjs | null;
@@ -66,7 +66,7 @@ const Form: React.FC = () => {
   useEffect(() => {
     const fetchSearchResults = async () => {
       if (searchQuery.length > 2) {
-        const data = await searchUser(searchQuery)
+        const data = await searchUser(searchQuery);
         setSearchResults(data);
       } else {
         setSearchResults([]);
@@ -80,7 +80,7 @@ const Form: React.FC = () => {
     setFormData((prevFormData) => ({
       ...prevFormData,
       uid: selectedUserId !== null ? selectedUserId : 0,
-      username: userN
+      username: userN,
     }));
   }, [selectedUserId]);
 
@@ -137,12 +137,11 @@ const Form: React.FC = () => {
     }
   };
 
-  // Function to get the last Thursday of the month
   const getLastThursdayOfMonth = (date: Dayjs): Dayjs => {
     const endOfMonth = date.endOf("month");
-    let lastThursday = endOfMonth.subtract(1, "week").day(4); // Set to Thursday of the last week of the month
+    let lastThursday = endOfMonth.subtract(1, "week").day(4);
     if (lastThursday.isAfter(endOfMonth)) {
-      lastThursday = endOfMonth.subtract(1, "week").day(4); // Adjust to the previous Thursday if needed
+      lastThursday = endOfMonth.subtract(1, "week").day(4);
     }
     return lastThursday;
   };
@@ -155,48 +154,50 @@ const Form: React.FC = () => {
   }, [formData.date]);
 
   return (
-  
     <Box sx={{ display: "flex", width: "100%", justifyContent: "center" }}>
-      <Box maxWidth={"md"}>
+      <Box maxWidth="md" width="100%">
         <Card elevation={4}>
-          <CardHeader title="Trading details" />
-          <CardContent>
-            {/* <UsernameSearch/> */}
+          <CardHeader title="Trading Details" />
+          <CardContent sx={{ maxHeight: '70vh', overflowY: 'auto' }}>
             <form onSubmit={handleSubmit}>
               <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      required
-                      label="Search Username"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="username"
-                      helperText="Username required"
-                    />
-                    {searchResults.length > 0 && (
-                      <List>
-                        {searchResults.map((user) => (
-                          <ListItem
-                            button
-                            key={user.id}
-                            onClick={() => {setSelectedUserId(user.id)
-                              setuserN(user.username)
-                            }}
-                          >
-                            <ListItemText primary={user.username} />
-                          </ListItem>
-                        ))}
-                      </List>
-                    )}
-                  </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    required
+                    label="Search Username"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Username"
+                    helperText="Username required"
+                  />
+                  {searchResults.length > 0 && (
+                    <List>
+                      {searchResults.map((user) => (
+                        <ListItem
+                          button
+                          key={user.id}
+                          onClick={() => {
+                            setSelectedUserId(user.id);
+                            setuserN(user.username);
+                          }}
+                        >
+                          <ListItemText primary={user.username} />
+                        </ListItem>
+                      ))}
+                    </List>
+                  )}
+                </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
                     <DatePicker
                       label="Date"
                       value={formData.date}
                       onChange={(date) =>
-                        setFormData((prevData) => ({ ...prevData, date: date as Dayjs }))
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          date: date as Dayjs,
+                        }))
                       }
                     />
                   </FormControl>
@@ -217,7 +218,10 @@ const Form: React.FC = () => {
                       label="Expiry (Last Thursday of the Month)"
                       value={formData.expiry}
                       onChange={(date) =>
-                        setFormData((prevData) => ({ ...prevData, expiry: date as Dayjs }))
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          expiry: date as Dayjs,
+                        }))
                       }
                     />
                   </FormControl>
@@ -226,7 +230,7 @@ const Form: React.FC = () => {
                   <TextField
                     fullWidth
                     required
-                    label="Lot size"
+                    label="Lot Size"
                     name="lotsize"
                     type="number"
                     value={formData.lotsize}
@@ -236,7 +240,7 @@ const Form: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="No of lot"
+                    label="Number of Lots"
                     name="numberlot"
                     type="number"
                     value={formData.numberlot}
@@ -246,7 +250,7 @@ const Form: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Buy quantity"
+                    label="Buy Quantity"
                     name="buyqty"
                     type="number"
                     value={formData.buyqty}
@@ -258,7 +262,7 @@ const Form: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Buy price"
+                    label="Buy Price"
                     name="buyprice"
                     type="number"
                     value={formData.buyprice}
@@ -268,7 +272,7 @@ const Form: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Sell quantity"
+                    label="Sell Quantity"
                     name="sellqty"
                     type="number"
                     value={formData.sellqty}
@@ -278,7 +282,7 @@ const Form: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Sell price"
+                    label="Sell Price"
                     name="sellprice"
                     type="number"
                     value={formData.sellprice}
@@ -286,7 +290,14 @@ const Form: React.FC = () => {
                   />
                 </Grid>
               </Grid>
-              <Box sx={{ pt: 2, display: "flex", width: "100%", justifyContent: "center" }}>
+              <Box
+                sx={{
+                  pt: 2,
+                  display: "flex",
+                  width: "100%",
+                  justifyContent: "center",
+                }}
+              >
                 <Button type="submit" variant="contained" color="success">
                   Submit
                 </Button>

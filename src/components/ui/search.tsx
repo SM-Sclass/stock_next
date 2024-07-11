@@ -9,12 +9,23 @@ import { searchUser } from '@/helpers/search';
 
 // Placeholder function for requesting username list from the backend
 const requestUsernameList = async (input: string): Promise<{ id: string; username: string }[]> => {
-  if (input.length > 0) {
-    const data = await searchUser(input);
-    console.log(data);
-    return data.map((user: { id: number; username: string }) => ({ id: user.id.toString(), username: user.username }));
+  try {
+    if (input.length > 0) {
+      const data = await searchUser(input);
+      if (Array.isArray(data)) {
+        return data.map((user: { id: number; username: string }) => ({
+          id: user.id.toString(),
+          username: user.username
+        }));
+      } else {
+        console.error('Unexpected data format:', data);
+      }
+    }
+    return [];
+  } catch (error) {
+    console.error('Error fetching username list:', error);
+    return [];
   }
-  return [];
 };
 
 // Define types for the username option

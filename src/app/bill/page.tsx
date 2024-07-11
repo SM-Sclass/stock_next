@@ -74,7 +74,15 @@ const Test = (props: Props) => {
                     </Grid>
                 )}
             </Grid>
-            <Box mt={2}>
+            <Box 
+                mt={2} 
+                sx={{
+                    height: 'calc(100vh - 150px)', 
+                    overflowY: 'auto',
+                    paddingRight: '16px',
+                    boxSizing: 'border-box'
+                }}
+            >
                 {/* {userentry.length > 0 ? (
                     <CollapsibleTable row={userentry} />
                 ) : (
