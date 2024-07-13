@@ -20,48 +20,56 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import { useMemo, useState } from 'react';
+import { cutFormatDate } from '@/app/weekService/page';
 
-interface Data {
+interface userData {
   id: number;
-  calories: number;
-  carbs: number;
-  fat: number;
-  name: string;
-  protein: number;
+  uid: number;
+  item: string;
+  date: string;
+  expiry: string;
+  lotsize: number;
+  totallot: number;
+  buyqty: number;
+  buyprice:string;
+  sellqty: string;
+  sellprice: string;
 }
 
 function createData(
   id: number,
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-): Data {
+  uid: number,
+  item: string,
+  date: string,
+  expiry: string,
+  lotsize: number,
+  totallot: number,
+  buyqty: number,
+  buyprice:string,
+  sellqty: string,
+  sellprice: string,
+  
+): userData {
   return {
     id,
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
+  uid,
+  item,
+  date,
+  expiry,
+  lotsize,
+  totallot,
+  buyqty,
+  buyprice,
+  sellqty,
+  sellprice,
   };
 }
 
 const rows = [
-  createData(1, 'Cupcake', 305, 3.7, 67, 4.3),
-  createData(2, 'Donut', 452, 25.0, 51, 4.9),
-  createData(3, 'Eclair', 262, 16.0, 24, 6.0),
-  createData(4, 'Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData(5, 'Gingerbread', 356, 16.0, 49, 3.9),
-  createData(6, 'Honeycomb', 408, 3.2, 87, 6.5),
-  createData(7, 'Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData(8, 'Jelly Bean', 375, 0.0, 94, 0.0),
-  createData(9, 'KitKat', 518, 26.0, 65, 7.0),
-  createData(10, 'Lollipop', 392, 0.2, 98, 0.0),
-  createData(11, 'Marshmallow', 318, 0, 81, 2.0),
-  createData(12, 'Nougat', 360, 19.0, 9, 37.0),
-  createData(13, 'Oreo', 437, 18.0, 63, 4.0),
+  createData(1,2, 'Cupcake', '2024-07-19', '2024-07-24', 67, 4, 403, '562', '56', '789'),
+  // createData(9,2, 'Cupcake', '2024-07-19', '2024-07-24', 67, '4', 403, '562', '56', '789'),
+  // createData(8,2, 'Cupcake', '2024-07-19', '2024-07-24', '67', '4', 403, '562', '56', '789'),
 ];
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -88,10 +96,6 @@ function getComparator<Key extends keyof any>(
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
 function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
@@ -106,47 +110,71 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Data;
+  id: keyof userData;
   label: string;
   numeric: boolean;
 }
 
 const headCells: readonly HeadCell[] = [
   {
-    id: 'name',
+    id: 'item',
     numeric: false,
     disablePadding: true,
-    label: 'Dessert (100g serving)',
+    label: 'Item',
   },
   {
-    id: 'calories',
+    id: 'date',
     numeric: true,
     disablePadding: false,
-    label: 'Calories',
+    label: 'Date',
   },
   {
-    id: 'fat',
+    id: 'expiry',
     numeric: true,
     disablePadding: false,
-    label: 'Fat (g)',
+    label: 'Expiry',
   },
   {
-    id: 'carbs',
+    id: 'lotsize',
     numeric: true,
     disablePadding: false,
-    label: 'Carbs (g)',
+    label: 'Lot size',
   },
   {
-    id: 'protein',
+    id: 'totallot',
     numeric: true,
     disablePadding: false,
-    label: 'Protein (g)',
+    label: 'Total lot',
+  },
+  {
+    id: 'buyqty',
+    numeric: true,
+    disablePadding: false,
+    label: 'Buy Qty.',
+  },
+  {
+    id: 'buyprice',
+    numeric: true,
+    disablePadding: false,
+    label: 'Buy price',
+  },
+  {
+    id: 'sellqty',
+    numeric: true,
+    disablePadding: false,
+    label: 'Sell Qty.',
+  },
+  {
+    id: 'sellprice',
+    numeric: true,
+    disablePadding: false,
+    label: 'Sell price',
   },
 ];
 
 interface EnhancedTableProps {
   numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
+  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof userData) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
@@ -157,7 +185,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
     props;
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    (property: keyof userData) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property);
     };
 
@@ -235,7 +263,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          Bill
         </Typography>
       )}
       {numSelected > 0 ? (
@@ -254,17 +282,35 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     </Toolbar>
   );
 }
-export default function EnhancedTable() {
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('calories');
-  const [selected, setSelected] = React.useState<readonly number[]>([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
+
+export default function EnhancedTable({Rows}:{Rows:any[]}) {
+
+  const processedRows = Object.values(Rows).map((rowData) => {
+    return createData(
+      rowData.id,
+      rowData.UID,
+      rowData.item,
+      rowData.date,
+      rowData.expiry,
+      rowData.lot_size,
+      rowData.no_of_lot,
+      rowData.buy_qty,
+      rowData.buy_price,
+      rowData.sell_qty,
+      rowData.sell_price,
+    );
+  });
+  const [order, setOrder] = useState<Order>('asc');
+  const [orderBy, setOrderBy] = useState<keyof userData>('date');
+  const [selected, setSelected] = useState<readonly number[]>([]);
+  const [entryArray, setEntryArray] = useState<userData[]>([]);
+  const [page, setPage] = useState(0);
+  // const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof Data,
+    property: keyof userData,
   ) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -273,8 +319,9 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = processedRows.map((n) => n.id);
       setSelected(newSelected);
+      console.log(selected)
       return;
     }
     setSelected([]);
@@ -308,19 +355,18 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
-  const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDense(event.target.checked);
-  };
+  // const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setDense(event.target.checked);
+  // };
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - processedRows.length) : 0;
 
-  const visibleRows = React.useMemo(
+  const visibleRows = useMemo(
     () =>
-      stableSort(rows, getComparator(order, orderBy)).slice(
+      stableSort(processedRows, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
       ),
@@ -335,7 +381,7 @@ export default function EnhancedTable() {
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
+            size={'medium'}
           >
             <EnhancedTableHead
               numSelected={selected.length}
@@ -343,7 +389,7 @@ export default function EnhancedTable() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={processedRows.length}
             />
             <TableBody>
               {visibleRows.map((row, index) => {
@@ -376,41 +422,45 @@ export default function EnhancedTable() {
                       scope="row"
                       padding="none"
                     >
-                      {row.name}
+                      {row.item}
                     </TableCell>
-                    <TableCell align="right">{row.calories}</TableCell>
-                    <TableCell align="right">{row.fat}</TableCell>
-                    <TableCell align="right">{row.carbs}</TableCell>
-                    <TableCell align="right">{row.protein}</TableCell>
+                    <TableCell align="right">{cutFormatDate(row.date)}</TableCell>
+                    <TableCell align="right">{cutFormatDate(row.expiry)}</TableCell>
+                    <TableCell align="right">{row.lotsize}</TableCell>
+                    <TableCell align="right">{row.totallot}</TableCell>
+                    <TableCell align="right">{row.buyqty}</TableCell>
+                    <TableCell align="right">{row.buyprice}</TableCell>
+                    <TableCell align="right">{row.sellqty}</TableCell>
+                    <TableCell align="right">{row.sellprice}</TableCell>
                   </TableRow>
                 );
               })}
-              {emptyRows > 0 && (
+              {/* {emptyRows > 0 && (
                 <TableRow
                   style={{
-                    height: (dense ? 33 : 53) * emptyRows,
+                    height: (53) * emptyRows,
                   }}
                 >
                   <TableCell colSpan={6} />
                 </TableRow>
-              )}
+              )} */}
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={processedRows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
+      {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
-      />
+      /> */}
     </Box>
   );
 }

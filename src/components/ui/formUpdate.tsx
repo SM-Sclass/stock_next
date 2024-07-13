@@ -1,11 +1,12 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import UsernameSearch from '@/components/ui/search'
-import { Grid, TextField, MenuItem, Select, FormControl, InputLabel, Container, Box } from '@mui/material'
+import { Grid, TextField, MenuItem, Select, FormControl, InputLabel, Container, Box, Button } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
-import { getEntry } from '@/helpers/search'
+import { getEntrybydate, getEntrybyweek } from '@/helpers/search'
 import CollapsibleTable from '@/components/ui/Table'
+import DataTable from '@/components/ui/billTable'
 type Props = {}
 
 const Test = (props: Props) => {
@@ -19,21 +20,35 @@ const Test = (props: Props) => {
         setUid(value)
     }
 
-    useEffect(() => {
-        const fetchEntries = async () => {
-            if (!uid || (!week && !date)) {
-                setUserentry([])
-                return
-            }
-            const searchParam = inputType === "week" ? week : date?.format('YYYY-MM-DD')
-            if(uid && searchParam) {
-              const result = await getEntry(uid,searchParam)
-              console.log(typeof result)
-                setUserentry(result)
-            }
+    const handleSubmit = async () => {
+        if (!uid || (!week && !date)) {
+            alert("Make sure you fill all details")
+            setUserentry([])
+            return
         }
-        fetchEntries()
-    }, [week, date, uid, inputType])
+        if(uid && week) {
+            handlewithWeek()
+        }
+        if(uid && date){
+            handlewithdate
+        }
+    }
+    const handlewithWeek= async ()=>{
+        if(week)
+        {
+            const result = await getEntrybyweek(uid, week)
+            console.log(typeof result)
+            setUserentry(result)
+        }
+    }
+    const handlewithdate= async ()=>{
+        if(date)
+        {
+            const result = await getEntrybydate(uid, date)
+            console.log(typeof result)
+            setUserentry(result)
+        }
+    }
 
     return (
         <Container>
@@ -73,6 +88,11 @@ const Test = (props: Props) => {
                     </Grid>
                 )}
             </Grid>
+            <Box mt={2}>
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                    Submit
+                </Button>
+            </Box>
             <Box mt={2}>
                 {userentry.length > 0 ? (
                     <CollapsibleTable row={userentry} />

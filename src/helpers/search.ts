@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export const searchUser = async (userName: string) => {
     try {
         const findUser = await fetch(`api/searchusers?id=${userName}`);
@@ -19,9 +21,20 @@ export const getUser = async (userId: number) => {
         return
     }
 };
-export const getEntry = async (uid: string , week_no:string) => {
+export const getEntrybyweek = async (uid: string , week_no:string) => {
     try {
-        const getUser = await fetch(`/api/getEntry?uid=${uid}&week=${week_no}`);
+        const getUser = await fetch(`/api/getEntrybyweek?uid=${uid}&week=${week_no}`);
+        const data = await getUser.json();
+        return data;
+    } catch (error: any) {
+        console.error(error, " Issue while getting user details")
+        return
+    }
+};
+export const getEntrybydate = async (uid: string , date:Dayjs) => {
+    try {
+        const formatDate:string = date?.format('YYYY-MM-DD');
+        const getUser = await fetch(`/api/getEntrybydate?uid=${uid}&date=${formatDate}`);
         const data = await getUser.json();
         return data;
     } catch (error: any) {
