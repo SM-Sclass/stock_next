@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import UsernameSearch from '@/components/ui/search'
-import { Grid, TextField, MenuItem, Select, FormControl, InputLabel, Container, Box } from '@mui/material'
+import { Grid, TextField, MenuItem, Select, FormControl, InputLabel, Box } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import { getEntry } from '@/helpers/search'
@@ -37,7 +37,8 @@ const Test = (props: Props) => {
     }, [week, date, uid, inputType])
 
     return (
-        <Container>
+        <Box width={'100%'} display='flex' justifyContent={'center'} mt={3}>
+            <Box maxWidth={'md'}>
             <UsernameSearch handleUID={handleUserid} />
             <FormControl fullWidth margin="normal">
                 <InputLabel id="input-type-label">Select Input Type</InputLabel>
@@ -51,9 +52,10 @@ const Test = (props: Props) => {
                     <MenuItem value="date">Date</MenuItem>
                 </Select>
             </FormControl>
-            <Grid container spacing={2}>
+            
+            
                 {inputType === "week" ? (
-                    <Grid item xs={12} sm={6}>
+                   <FormControl fullWidth margin="normal">
                         <TextField
                             fullWidth
                             label="Week Number"
@@ -63,17 +65,17 @@ const Test = (props: Props) => {
                             onChange={(e) => setWeek(e.target.value)}
                             margin="normal"
                         />
-                    </Grid>
+                    </FormControl>
                 ) : (
-                    <Grid item xs={12} sm={6}>
+                    
+                    <FormControl fullWidth margin="normal">
                         <DatePicker
                             label="Date"
                             value={date}
                             onChange={(newValue) => setDate(newValue)}
                         />
-                    </Grid>
+                    </FormControl>
                 )}
-            </Grid>
             <Box 
                 mt={2} 
                 sx={{
@@ -90,7 +92,8 @@ const Test = (props: Props) => {
                 )} */}
                 <DataTable/>
             </Box>
-        </Container>
+            </Box>
+        </Box>
     )
 }
 

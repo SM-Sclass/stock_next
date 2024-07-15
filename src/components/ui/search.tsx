@@ -74,7 +74,6 @@ const UsernameSearch: React.FC<UsernameSearchProps> = ({ handleUID }) => {
   return (
     <Autocomplete
       id="username-search"
-      sx={{ width: 300 }}
       getOptionLabel={(option) => option.username}
       filterOptions={(x) => x}
       options={options}
@@ -83,6 +82,7 @@ const UsernameSearch: React.FC<UsernameSearchProps> = ({ handleUID }) => {
       filterSelectedOptions
       value={value}
       noOptionsText="No usernames"
+      fullWidth
       onChange={(event, newValue) => {
         setOptions(newValue ? [newValue, ...options] : options);
         setValue(newValue);
